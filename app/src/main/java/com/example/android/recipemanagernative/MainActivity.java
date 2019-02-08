@@ -1,5 +1,6 @@
 package com.example.android.recipemanagernative;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,14 +10,21 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.recipemanagernative.Database.RecipeManagerContract;
+import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
+
 public class MainActivity extends AppCompatActivity {
 
+    private RecipeManagerDbHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        dbHelper = new RecipeManagerDbHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
     }
 
     @Override
