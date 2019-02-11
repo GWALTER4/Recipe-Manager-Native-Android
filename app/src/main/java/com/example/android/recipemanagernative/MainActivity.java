@@ -2,43 +2,62 @@ package com.example.android.recipemanagernative;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.android.recipemanagernative.Database.RecipeManagerContract;
+import com.example.android.recipemanagernative.CategoryRecyclerView.CategoryAdapter;
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
+import com.example.android.recipemanagernative.CategoryRecyclerView.Category;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecipeManagerDbHelper dbHelper;
+    private RecyclerView categoryRecyclerView;
+    private RecyclerView.Adapter categoryAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    // GUT
+    private List<Category> categoryList = new ArrayList<Category>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Sets the toolbar.
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dbHelper = new RecipeManagerDbHelper(this);
+        categoryRecyclerView = (RecyclerView) findViewById(R.id.category_recycler_view);
+        layoutManager = new LinearLayoutManager(this);
+        categoryAdapter = new CategoryAdapter(/* GUT*/categoryList);
+        categoryRecyclerView.setAdapter(categoryAdapter);
+        categoryRecyclerView.setLayoutManager(layoutManager);
+
+        // Gets the database.
+        RecipeManagerDbHelper dbHelper = new RecipeManagerDbHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+        
+        // GUT
+        categoryList.add(new Category("Breakfast"));
+        categoryList.add(new Category("Lunch"));
+        categoryList.add(new Category("Dinner"));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {

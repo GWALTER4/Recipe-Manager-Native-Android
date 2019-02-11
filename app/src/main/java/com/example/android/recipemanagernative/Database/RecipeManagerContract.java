@@ -98,10 +98,10 @@ public final class RecipeManagerContract {
                 RecipeEntry.COLUMN_RECIPE_NAME + " TEXT NOT NULL," +
                 RecipeEntry.COLUMN_IMAGE_URI + " TEXT NOT NULL," +
                 RecipeEntry.COLUMN_INGREDIENTS_LIST + " TEXT NOT NULL," +
-                RecipeEntry.COLUMN_INSTRUCTION_COUNT + " INTEGER NOT NULL" +
+                RecipeEntry.COLUMN_INSTRUCTION_COUNT + " INTEGER NOT NULL," +
                 RecipeEntry.COLUMN_TOTAL_DURATION + " INTEGER NOT NULL," +
-                "CONSTRAINT" + RecipeEntry.FK_CATEGORY_ID +
-                "FOREIGN KEY (" + CategoryEntry.ID + ") " +
+                "CONSTRAINT " + RecipeEntry.FK_CATEGORY_ID +
+                " FOREIGN KEY (" + CategoryEntry.ID + ") " +
                 "REFERENCES " + CategoryEntry.TABLE_NAME + "(" + CategoryEntry.ID + "));";
 
         public static final String SQL_CREATE_INSTRUCTION =
@@ -110,8 +110,8 @@ public final class RecipeManagerContract {
                 InstructionEntry.COLUMN_SEQUENCE_NUMBER + " INTEGER NOT NULL," +
                 InstructionEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL," +
                 InstructionEntry.COLUMN_DURATION + " INTEGER NOT NULL," +
-                "CONSTRAINT" + InstructionEntry.FK_RECIPE_ID +
-                "FOREIGN KEY (" + RecipeEntry.ID + ") " +
+                "CONSTRAINT " + InstructionEntry.FK_RECIPE_ID +
+                " FOREIGN KEY (" + RecipeEntry.ID + ") " +
                 "REFERENCES " + RecipeEntry.TABLE_NAME + "(" + RecipeEntry.ID + "));";
     }
 }
