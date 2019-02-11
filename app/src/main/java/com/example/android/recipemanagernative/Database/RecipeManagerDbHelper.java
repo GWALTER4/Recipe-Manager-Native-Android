@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class RecipeManagerDbHelper extends SQLiteOpenHelper {
 
+    // Stores an instance of the RecipeManagerDbHelper class.
     private static RecipeManagerDbHelper instance;
 
     // Database version number.
@@ -15,6 +16,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     // Name of the database file.
     private static final String DATABASE_NAME = "RecipeManager.db";
 
+    // Singleton accessor for the RecipeManagerDbHelper class.
     public static synchronized RecipeManagerDbHelper getInstance(Context context){
         if(instance == null) {
             instance = new RecipeManagerDbHelper(context.getApplicationContext());

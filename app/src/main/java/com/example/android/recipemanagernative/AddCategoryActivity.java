@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.android.recipemanagernative.CategoryRecyclerView.Category;
 import com.example.android.recipemanagernative.CategoryRecyclerView.CategoryAdapter;
@@ -54,8 +56,15 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.action_confirm_category:
-                return true;
+                EditText simpleEditText = (EditText) findViewById(R.id.edit_category_name);
+                String strValue = simpleEditText.getText().toString();
+
+                if(InputCheck.getInstance().categoryNameNotNull(strValue)){
+                    Toast.makeText(this, "Added", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
         }
+        Toast.makeText(this, "Not Added", Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
     }
 }
