@@ -1,8 +1,10 @@
 package com.example.android.recipemanagernative;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -31,23 +33,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Sets the toolbar.
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
         categoryRecyclerView = (RecyclerView) findViewById(R.id.category_recycler_view);
+        categoryRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         layoutManager = new LinearLayoutManager(this);
         categoryAdapter = new CategoryAdapter(/* GUT*/categoryList);
         categoryRecyclerView.setAdapter(categoryAdapter);
         categoryRecyclerView.setLayoutManager(layoutManager);
 
         // Gets the database.
-        RecipeManagerDbHelper dbHelper = new RecipeManagerDbHelper(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        
+        SQLiteDatabase db = RecipeManagerDbHelper.getInstance(this).getReadableDatabase();
+
         // GUT
         categoryList.add(new Category("Breakfast"));
         categoryList.add(new Category("Lunch"));
         categoryList.add(new Category("Dinner"));
+
     }
 
     @Override
@@ -58,12 +61,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+
+            case R.id.action_add_category:
+                // Creates an intent to open the AddCategory activity.
+                Intent addCategoryIntent = new Intent(MainActivity.this, AddCategoryActivity.class);
+
+                // Starts the new activity.
+                startActivity(addCategoryIntent);
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
