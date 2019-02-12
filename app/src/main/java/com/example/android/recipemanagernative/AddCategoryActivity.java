@@ -22,6 +22,8 @@ public class AddCategoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Inflates the activity layout.
         setContentView(R.layout.activity_add_category);
 
         // Sets the toolbar.
@@ -46,7 +48,9 @@ public class AddCategoryActivity extends AppCompatActivity {
     }
 
     @Override
+    // Creates the options menu.
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflates a menu layout.
         getMenuInflater().inflate(R.menu.menu_add_category, menu);
         return true;
     }
@@ -56,15 +60,44 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.action_confirm_category:
-                EditText simpleEditText = (EditText) findViewById(R.id.edit_category_name);
-                String strValue = simpleEditText.getText().toString();
 
-                if(InputCheck.getInstance().categoryNameNotNull(strValue)){
-                    Toast.makeText(this, "Added", Toast.LENGTH_SHORT).show();
+                int code = confirmCategory();
+                if(code == 1){
+                    Toast.makeText(this, "Category added",Toast.LENGTH_SHORT).show();
+                    finish();
                     return true;
                 }
+                else if(code == 0){
+                    Toast.makeText(this, "Invalid category name",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(this, "Database error",Toast.LENGTH_SHORT).show();
+                }
         }
-        Toast.makeText(this, "Not Added", Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
+    }
+
+    // Adds the category to the database.
+    public int confirmCategory(){
+
+        // Finds the EditText view and gets the string from it.
+        EditText categoryNameEditText = (EditText) findViewById(R.id.edit_category_name);
+        String categoryName = categoryNameEditText.getText().toString();
+
+        // Checks if the category name is valid.
+        if(InputCheck.getInstance().isCategoryNameValid(categoryName.trim())){
+            long newRowId = RecipeManagerDbHelper.getInstance(this).insertCategory(categoryName);
+
+            // Checks if the category name was inserted into the database.
+            // -1 == error, 1 == inserted.
+            if(newRowId != -1){
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+        else{
+            return 0;
+        }
     }
 }

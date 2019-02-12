@@ -2,6 +2,8 @@ package com.example.android.recipemanagernative;
 
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
 
+import java.util.regex.Pattern;
+
 public class InputCheck {
 
     // Stores an instance of the InputCheck class.
@@ -15,10 +17,13 @@ public class InputCheck {
         return instance;
     }
 
-    public boolean categoryNameNotNull(String categoryName){
-        if(categoryName.equals(null) || categoryName.equals("")) {
+    // Checks if a category name contains valid characters.
+    public boolean isCategoryNameValid(String categoryName){
+        if(Pattern.matches("[a-zA-Z\\s]+",categoryName)){
+            return true;
+        }
+        else{
             return false;
         }
-            return true;
     }
 }

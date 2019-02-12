@@ -25,7 +25,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     }
 
     // Constructs a new instance of the database.
-    public RecipeManagerDbHelper(Context context) {
+    private RecipeManagerDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -44,7 +44,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     }
 
     // Inserts a category into the database.
-    public void insertCategory(String categoryName) {
+    public long insertCategory(String categoryName) {
 
         // Gets the database in write mode.
         SQLiteDatabase db = super.getWritableDatabase();
@@ -54,6 +54,6 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         values.put(RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME, categoryName);
 
         // Inserts a new row into the database.
-        db.insert(RecipeManagerContract.CategoryEntry.TABLE_NAME, null, values);
+        return db.insert(RecipeManagerContract.CategoryEntry.TABLE_NAME, null, values);
     }
 }
