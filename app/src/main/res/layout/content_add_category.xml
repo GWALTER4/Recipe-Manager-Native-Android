@@ -19,6 +19,6 @@
         android:hint="@string/hint_category_name"
         android:inputType="textCapWords"
         android:textAppearance="?android:textAppearanceMedium"
-        android:maxLength="35"/>
+        android:maxLength="35" />
 
 </android.support.constraint.ConstraintLayout>

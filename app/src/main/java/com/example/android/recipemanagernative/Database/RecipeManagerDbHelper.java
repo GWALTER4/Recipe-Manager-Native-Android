@@ -2,6 +2,7 @@ package com.example.android.recipemanagernative.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -16,6 +17,10 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     // Name of the database file.
     private static final String DATABASE_NAME = "RecipeManager.db";
 
+    private SQLiteDatabase writeDB;
+
+    private SQLiteDatabase readDB;
+
     // Singleton accessor for the RecipeManagerDbHelper class.
     public static synchronized RecipeManagerDbHelper getInstance(Context context){
         if(instance == null) {
@@ -27,6 +32,12 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     // Constructs a new instance of the database.
     private RecipeManagerDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+        // Gets the database in write mode.
+        writeDB = super.getWritableDatabase();
+
+        // Gets the database in read mode.
+        readDB = super.getReadableDatabase();
     }
 
     // Called when the database is created for the first time.
@@ -46,14 +57,32 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     // Inserts a category into the database.
     public long insertCategory(String categoryName) {
 
-        // Gets the database in write mode.
-        SQLiteDatabase db = super.getWritableDatabase();
-
         // Creates a new map of values.
         ContentValues values = new ContentValues();
         values.put(RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME, categoryName);
 
         // Inserts a new row into the database.
-        return db.insert(RecipeManagerContract.CategoryEntry.TABLE_NAME, null, values);
+        return writeDB.insert(RecipeManagerContract.CategoryEntry.TABLE_NAME, null, values);
+    }
+
+    public Cursor readCategory(){
+
+        // Defines a projection that specifies which columns from the database the query will use.
+        String[] projection = {
+                RecipeManagerContract.CategoryEntry.ID,
+                RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME
+        };
+
+        Cursor cursor = readDB.query(
+                RecipeManagerContract.CategoryEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        return cursor;
     }
 }

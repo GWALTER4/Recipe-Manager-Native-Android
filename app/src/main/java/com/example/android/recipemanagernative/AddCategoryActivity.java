@@ -1,16 +1,23 @@
 package com.example.android.recipemanagernative;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.recipemanagernative.CategoryRecyclerView.Category;
@@ -60,7 +67,6 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.action_confirm_category:
-
                 int code = confirmCategory();
                 if(code == 1){
                     Toast.makeText(this, "Category added",Toast.LENGTH_SHORT).show();
@@ -81,7 +87,7 @@ public class AddCategoryActivity extends AppCompatActivity {
     public int confirmCategory(){
 
         // Finds the EditText view and gets the string from it.
-        EditText categoryNameEditText = (EditText) findViewById(R.id.edit_category_name);
+        final EditText categoryNameEditText = (EditText) findViewById(R.id.edit_category_name);
         String categoryName = categoryNameEditText.getText().toString();
 
         // Checks if the category name is valid.
