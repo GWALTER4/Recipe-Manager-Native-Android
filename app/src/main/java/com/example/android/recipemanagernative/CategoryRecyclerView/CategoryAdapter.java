@@ -1,6 +1,7 @@
 package com.example.android.recipemanagernative.CategoryRecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.recipemanagernative.CategoryActivity;
 import com.example.android.recipemanagernative.Database.RecipeManagerContract;
+import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
+import com.example.android.recipemanagernative.MainActivity;
 import com.example.android.recipemanagernative.R;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
@@ -52,7 +56,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         // Gets the category name from the row in the cursor.
         String categoryName = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME));
+
+        // Gets the id number of the category.
+        long id = cursor.getLong(cursor.getColumnIndex(RecipeManagerContract.CategoryEntry.ID));
+
         holder.categoryNameTextView.setText(categoryName);
+        holder.categoryNameTextView.setTag(id);
     }
 
     // Returns the size of the dataset.
