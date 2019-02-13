@@ -12,9 +12,12 @@
     <TextView
         android:id="@+id/category_name_text_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/category_row_height"
         android:layout_alignParentTop="true"
+        android:gravity="center|start"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:textColor="@color/colorPrimaryLight"
-        android:textSize="20sp"/>
+        android:textSize="24sp" />
 
 </RelativeLayout>
