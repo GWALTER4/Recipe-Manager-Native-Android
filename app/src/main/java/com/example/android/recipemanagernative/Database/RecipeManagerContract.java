@@ -85,13 +85,16 @@ public final class RecipeManagerContract {
         public final static String FK_RECIPE_ID = "fk_recipe_id";
     }
 
+    // Inner class the defines the table create statements.
     public static final class SQLCreateStatements{
 
+        // Category table create statement.
         public static final String SQL_CREATE_CATEGORY =
                 "CREATE TABLE " + CategoryEntry.TABLE_NAME + " (" +
                 CategoryEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 CategoryEntry.COLUMN_CATEGORY_NAME + " TEXT NOT NULL);";
 
+        // Recipe table create statement.
         public static final String SQL_CREATE_RECIPE =
                 "CREATE TABLE " + RecipeEntry.TABLE_NAME + " (" +
                 RecipeEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -104,6 +107,7 @@ public final class RecipeManagerContract {
                 " FOREIGN KEY (" + CategoryEntry.ID + ") " +
                 "REFERENCES " + CategoryEntry.TABLE_NAME + "(" + CategoryEntry.ID + "));";
 
+        // Instruction table create statement.
         public static final String SQL_CREATE_INSTRUCTION =
                 "CREATE TABLE " + InstructionEntry.TABLE_NAME + " (" +
                 InstructionEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +

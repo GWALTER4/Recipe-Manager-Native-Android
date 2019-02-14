@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.android.recipemanagernative.CategoryRecyclerView.CategoryAdapter;
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
@@ -24,11 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Stores an adapter for the recycler view.
     private CategoryAdapter categoryAdapter;
-
-
-    public static interface ClickListener {
-        public void onClick(View view, int position);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +42,26 @@ public class MainActivity extends AppCompatActivity {
         // Adds a separator to the recycler view.
         categoryRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-        class RecyclerTouchListener implements RecyclerView.OnItemTouchListener{
+        // Creates a touch listener to intercept touch events.
+        class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener {
 
-            private ClickListener mClickListener;
-            private GestureDetector mGestureDetector;
+            private GestureDetector gestureDetector; // Holds a gesture detector object.
 
-            public RecyclerTouchListener(Context context, final RecyclerView recyclerView, ClickListener clickListener){
-                mClickListener = clickListener;
-                mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
+            // Constructor for the recycler view touch listener class.
+            public RecyclerViewTouchListener(Context context, final RecyclerView recyclerView){
+
+                // Instantiates a new gesture detector object and supplies an on gesture listener.
+                gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
+
+                    // Listens for a single tap.
                     @Override
                     public boolean onSingleTapUp(MotionEvent e) {
+
+                        // Finds the view in the recycler view that the user clicked.
                         View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                         if(child != null) {
-                            int childPosition = recyclerView.getChildLayoutPosition(child);
-                            mClickListener.onClick(child, childPosition);
+                            //int childPosition = recyclerView.getChildLayoutPosition(child);
+                            RecyclerViewTouchListener.this.onClick();
                         }
                         return true;
                     }
@@ -70,28 +70,31 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-                mGestureDetector.onTouchEvent(motionEvent);
-                return false;
+                // Analyzes the motion event and triggers the appropriate callbacks in the gesture
+                // listener supplied.
+                gestureDetector.onTouchEvent(motionEvent);
+                return true;
             }
 
             @Override
             public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-
+                // Does not need to do anything.
             }
 
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean b) {
 
             }
-        }
 
-        categoryRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, categoryRecyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
+            // Handles a user clicking on an item in the recycler view.
+            public void onClick(){
+                // Starts the category activity.
                 Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
                 startActivity(intent);
             }
-        }));
+        }
+
+        categoryRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(this, categoryRecyclerView));
     }
 
     @Override
@@ -123,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Cursor getAllCategories() {
+        // Reads all the category rows from the database.
         return RecipeManagerDbHelper.getInstance(this).readCategory();
     }
 }

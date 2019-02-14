@@ -18,13 +18,13 @@ import com.example.android.recipemanagernative.R;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
-    private Context context;
-    private Cursor cursor;
+    private Context context; // Holds the application context.
+    private Cursor cursor; // Holds a cursor object.
 
     // Provides a reference to the views for each data item.
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView categoryNameTextView;
+        private TextView categoryNameTextView;
         public CategoryViewHolder(View view) {
             super(view);
             categoryNameTextView = (TextView) view.findViewById(R.id.category_name_text_view);
@@ -46,7 +46,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return new CategoryViewHolder(categoryRowView);
     }
 
-    // Replace the contents of a view.
+    // Replaces the contents of a view.
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         // Checks the cursor can move to the position.
@@ -57,11 +57,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         // Gets the category name from the row in the cursor.
         String categoryName = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME));
 
-        // Gets the id number of the category.
-        long id = cursor.getLong(cursor.getColumnIndex(RecipeManagerContract.CategoryEntry.ID));
-
+        // Sets the text of the view to the category name.
         holder.categoryNameTextView.setText(categoryName);
-        holder.categoryNameTextView.setTag(id);
     }
 
     // Returns the size of the dataset.

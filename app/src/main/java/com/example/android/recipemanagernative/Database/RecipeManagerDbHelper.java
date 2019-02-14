@@ -17,8 +17,10 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     // Name of the database file.
     private static final String DATABASE_NAME = "RecipeManager.db";
 
+    // Stores a connection to the database in write mode.
     private SQLiteDatabase writeDB;
 
+    // Stores a connection to the database in read mode.
     private SQLiteDatabase readDB;
 
     // Singleton accessor for the RecipeManagerDbHelper class.
@@ -65,6 +67,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         return writeDB.insert(RecipeManagerContract.CategoryEntry.TABLE_NAME, null, values);
     }
 
+    // Reads the categories from the database.
     public Cursor readCategory(){
 
         // Defines a projection that specifies which columns from the database the query will use.
@@ -73,6 +76,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
                 RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME
         };
 
+        // Executes the query.
         Cursor cursor = readDB.query(
                 RecipeManagerContract.CategoryEntry.TABLE_NAME,
                 projection,

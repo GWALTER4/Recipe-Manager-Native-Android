@@ -19,6 +19,9 @@ public class InputCheck {
 
     // Checks if a category name contains valid characters.
     public boolean isCategoryNameValid(String categoryName){
+
+        // Uses a regex that only allows alphabetical characters and spaces to
+        // validate the user's inputted category name.
         if(Pattern.matches("[a-zA-Z\\s]+",categoryName)){
             return true;
         }

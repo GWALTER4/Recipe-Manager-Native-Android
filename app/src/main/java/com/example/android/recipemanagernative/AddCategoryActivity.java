@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.recipemanagernative.CategoryRecyclerView.Category;
 import com.example.android.recipemanagernative.CategoryRecyclerView.CategoryAdapter;
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
 
@@ -97,13 +96,13 @@ public class AddCategoryActivity extends AppCompatActivity {
             // Checks if the category name was inserted into the database.
             // -1 == error, 1 == inserted.
             if(newRowId != -1){
-                return 1;
+                return 1; // Category added.
             } else {
-                return -1;
+                return -1; // Database error.
             }
         }
         else{
-            return 0;
+            return 0; // Invalid category name.
         }
     }
 }
