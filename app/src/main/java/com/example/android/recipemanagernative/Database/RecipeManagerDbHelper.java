@@ -68,7 +68,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     }
 
     // Reads the categories from the database.
-    public Cursor readCategory(){
+    public Cursor findCategories(){
 
         // Defines a projection that specifies which columns from the database the query will use.
         String[] projection = {
@@ -77,7 +77,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         };
 
         // Executes the query.
-        Cursor cursor = readDB.query(
+        return readDB.query(
                 RecipeManagerContract.CategoryEntry.TABLE_NAME,
                 projection,
                 null,
@@ -87,6 +87,35 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
                 null
         );
 
-        return cursor;
+        //return cursor;
+    }
+
+    // Finds the name of a category corresponding to the supplied category ID.
+    public Cursor findCategoryName(Long categoryID){
+
+        // Defines a projection.
+        String[] projection = {
+                RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME
+        };
+
+        // Filters the query results.
+        String selection = RecipeManagerContract.CategoryEntry.ID + " = ?";
+        String[] selectionArgs = {categoryID.toString()};
+
+        return readDB.query(
+                RecipeManagerContract.CategoryEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+    }
+
+    public void deleteCategory(Long categoryID) {
+        String selection = RecipeManagerContract.CategoryEntry.ID + " LIKE ?";
+        String[] selectionArgs = {categoryID.toString()};
+        writeDB.delete(RecipeManagerContract.CategoryEntry.TABLE_NAME, selection, selectionArgs);
     }
 }

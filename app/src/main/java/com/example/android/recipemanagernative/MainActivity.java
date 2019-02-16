@@ -16,6 +16,9 @@ import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
 
 public class MainActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryClickListener {
 
+    // Stores a string key for intent extras.
+    public static final String START_MESSAGE = "com.example.android.recipemanagernative.START_MESSAGE";
+
     // Stores an adapter for the recycler view.
     private CategoryAdapter categoryAdapter;
 
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
         // Creates the recycler view.
         RecyclerView categoryRecyclerView = (RecyclerView) findViewById(R.id.category_recycler_view);
         categoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        categoryAdapter = new CategoryAdapter(this, RecipeManagerDbHelper.getInstance(this).readCategory(), this);
+        categoryAdapter = new CategoryAdapter(this, RecipeManagerDbHelper.getInstance(this).findCategories(), this);
         categoryRecyclerView.setAdapter(categoryAdapter);
 
         // Adds a separator to the recycler view.
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
     @Override
     protected void onStart(){
         super.onStart();
-        categoryAdapter.updateCursor(RecipeManagerDbHelper.getInstance(this).readCategory());
+        categoryAdapter.updateCursor(RecipeManagerDbHelper.getInstance(this).findCategories());
     }
 
     @Override
@@ -68,10 +71,11 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
     @Override
     // Overrides the implementation in the CategoryAdapter.OnCategoryClickListener interface.
-    public void onCategoryClick(Long categoryID) {
-        Toast.makeText(this, categoryID.toString(),Toast.LENGTH_SHORT).show();
+    public void onCategoryClick(long categoryID) {
+
         // Starts the Category activity.
         Intent categoryActivityIntent = new Intent(this, CategoryActivity.class);
+        categoryActivityIntent.putExtra(START_MESSAGE, categoryID);
         startActivity(categoryActivityIntent);
     }
 }

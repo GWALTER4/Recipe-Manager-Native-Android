@@ -20,7 +20,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     // Provides a method to handle when categories are clicked.
     public interface OnCategoryClickListener{
-        void onCategoryClick(Long categoryID);
+        void onCategoryClick(long categoryID);
     }
 
     // Provides a reference to the views for each data item.
