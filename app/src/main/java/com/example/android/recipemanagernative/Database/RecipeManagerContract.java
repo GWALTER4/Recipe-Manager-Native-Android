@@ -33,6 +33,10 @@ public final class RecipeManagerContract {
         // TYPE: INTEGER
         public final static String ID = BaseColumns._ID;
 
+        // Unique ID number for the category.
+        // TYPE: INTEGER
+        public final static String CATEGORY_ID = "category_id";
+
         // Name of the recipe.
         // TYPE: TEXT
         public final static String COLUMN_RECIPE_NAME = "name";
@@ -68,6 +72,10 @@ public final class RecipeManagerContract {
         // TYPE: INTEGER
         public final static String ID = BaseColumns._ID;
 
+        // Unique ID number for the recipe.
+        // TYPE: RECIPE
+        public final static String RECIPE_ID = "recipe_id";
+
         // Sequence number for the instruction.
         // TYPE: INTEGER
         public final static String COLUMN_SEQUENCE_NUMBER = "sequence_number";
@@ -98,24 +106,26 @@ public final class RecipeManagerContract {
         public static final String SQL_CREATE_RECIPE =
                 "CREATE TABLE " + RecipeEntry.TABLE_NAME + " (" +
                 RecipeEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                RecipeEntry.CATEGORY_ID + " INTEGER NOT NULL," +
                 RecipeEntry.COLUMN_RECIPE_NAME + " TEXT NOT NULL," +
                 RecipeEntry.COLUMN_IMAGE_URI + " TEXT NOT NULL," +
                 RecipeEntry.COLUMN_INGREDIENTS_LIST + " TEXT NOT NULL," +
                 RecipeEntry.COLUMN_INSTRUCTION_COUNT + " INTEGER NOT NULL," +
                 RecipeEntry.COLUMN_TOTAL_DURATION + " INTEGER NOT NULL," +
                 "CONSTRAINT " + RecipeEntry.FK_CATEGORY_ID +
-                " FOREIGN KEY (" + CategoryEntry.ID + ") " +
+                " FOREIGN KEY (" + RecipeEntry.CATEGORY_ID + ") " +
                 "REFERENCES " + CategoryEntry.TABLE_NAME + "(" + CategoryEntry.ID + "));";
 
         // Instruction table create statement.
         public static final String SQL_CREATE_INSTRUCTION =
                 "CREATE TABLE " + InstructionEntry.TABLE_NAME + " (" +
                 InstructionEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                InstructionEntry.RECIPE_ID + " INTEGER NOT NULL," +
                 InstructionEntry.COLUMN_SEQUENCE_NUMBER + " INTEGER NOT NULL," +
                 InstructionEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL," +
                 InstructionEntry.COLUMN_DURATION + " INTEGER NOT NULL," +
                 "CONSTRAINT " + InstructionEntry.FK_RECIPE_ID +
-                " FOREIGN KEY (" + RecipeEntry.ID + ") " +
+                " FOREIGN KEY (" + InstructionEntry.RECIPE_ID + ") " +
                 "REFERENCES " + RecipeEntry.TABLE_NAME + "(" + RecipeEntry.ID + "));";
     }
 }

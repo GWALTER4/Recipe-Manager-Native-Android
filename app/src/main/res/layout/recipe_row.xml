@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/recipe_list_item_image_view"
+        android:layout_width="@dimen/list_row_height"
+        android:layout_height="@dimen/list_row_height"
+        android:scaleType="centerCrop" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_row_height"
+        android:layout_toEndOf="@id/recipe_list_item_image_view"
+        android:paddingLeft="@dimen/activity_margin">
+
+        <TextView
+            android:id="@+id/recipe_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/recipe_name_text_view_height"
+            android:gravity="center|start"
+            android:text="Spaghetti Bolognese"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/recipe_steps_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/recipe_name_text_view_height"
+            android:layout_below="@id/recipe_name_text_view"
+            android:gravity="center|start"
+            android:text="10 Steps"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/recipe_duration_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/recipe_name_text_view_height"
+            android:layout_below="@id/recipe_name_text_view"
+            android:layout_marginStart="@dimen/activity_margin"
+            android:layout_toEndOf="@id/recipe_steps_text_view"
+            android:gravity="center|start"
+            android:text="30 Minutes"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

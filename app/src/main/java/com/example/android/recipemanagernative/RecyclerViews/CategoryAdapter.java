@@ -1,4 +1,4 @@
-package com.example.android.recipemanagernative.CategoryRecyclerView;
+package com.example.android.recipemanagernative.RecyclerViews;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -30,7 +30,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         private OnCategoryClickListener onCategoryClickListener; // Holds the click listener interface.
 
         // Constructor for the view holder.
-        public CategoryViewHolder(View view, OnCategoryClickListener onCategoryClickListener) {
+        private CategoryViewHolder(View view, OnCategoryClickListener onCategoryClickListener) {
             super(view);
 
             // Assigns the text view.

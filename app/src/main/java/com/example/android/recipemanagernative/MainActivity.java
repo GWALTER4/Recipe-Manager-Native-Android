@@ -9,9 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.android.recipemanagernative.CategoryRecyclerView.CategoryAdapter;
+import com.example.android.recipemanagernative.RecyclerViews.CategoryAdapter;
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
 
 public class MainActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryClickListener {

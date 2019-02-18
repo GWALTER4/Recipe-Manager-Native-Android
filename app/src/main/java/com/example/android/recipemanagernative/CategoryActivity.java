@@ -1,6 +1,5 @@
 package com.example.android.recipemanagernative;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,17 +13,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.android.recipemanagernative.CategoryRecyclerView.CategoryAdapter;
 import com.example.android.recipemanagernative.Database.RecipeManagerContract;
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
+import com.example.android.recipemanagernative.RecyclerViews.CategoryAdapter;
+import com.example.android.recipemanagernative.RecyclerViews.RecipeAdapter;
 
-public class CategoryActivity extends AppCompatActivity {
+public class CategoryActivity extends AppCompatActivity implements RecipeAdapter.OnRecipeClickListener {
 
+    // Stores a string key for intent extras.
+    public static final String START_MESSAGE = "com.example.android.recipemanagernative.START_MESSAGE";
     private long categoryID; // ID for the category being displayed.
+    private RecipeAdapter recipeAdapter; // Stores an adapter for the recycler view.
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_category);
 
         // Gets the intent that starts this activity.
         Intent categoryActivityIntent = getIntent();
@@ -33,23 +36,26 @@ public class CategoryActivity extends AppCompatActivity {
         categoryID = categoryActivityIntent.getLongExtra(MainActivity.START_MESSAGE, -1);
 
         // Sets the toolbar.
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_category);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(findCategoryTitle(categoryID));
-    }
 
-    // Finds the category title corresponding to the supplied category ID.
-    private String findCategoryTitle(long categoryID){
+        if(getSupportActionBar() != null) {
+            // Allows up navigation in the toolbar.
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Gets a cursor from the database.
-        Cursor cursor = RecipeManagerDbHelper.getInstance(this).findCategoryName(categoryID);
-
-        if(cursor != null && cursor.moveToFirst()) {
-            String categoryName = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME));
-            cursor.close();
-            return categoryName;
+            // Shows the home button.
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        return "Error";
+
+        // Creates the recycler view.
+        RecyclerView recipeRecyclerView = (RecyclerView) findViewById(R.id.recipe_recycler_view);
+        recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recipeAdapter = new RecipeAdapter(this, RecipeManagerDbHelper.getInstance(this).findRecipes(categoryID), this);
+        recipeRecyclerView.setAdapter(recipeAdapter);
+
+        // Adds a separator to the recycler view.
+        recipeRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
     }
 
     @Override
@@ -101,5 +107,37 @@ public class CategoryActivity extends AppCompatActivity {
 
         // Creates and returns the dialog
         return deleteDialogBuilder.create();
+    }
+
+    @Override
+    // Called when the user chooses to navigate up.
+    public boolean onSupportNavigateUp() {
+        // Called when the user presses the back key and finishes the activity.
+        onBackPressed();
+        return true;
+    }
+
+    // Finds the category title corresponding to the supplied category ID.
+    private String findCategoryTitle(long categoryID){
+
+        // Gets a cursor from the database.
+        Cursor cursor = RecipeManagerDbHelper.getInstance(this).findCategoryName(categoryID);
+
+        if(cursor != null && cursor.moveToFirst()) {
+            String categoryName = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME));
+            cursor.close();
+            return categoryName;
+        }
+        return "Error";
+    }
+
+    @Override
+    // Overrides the implementation in the RecipeAdapter.OnRecipeClickListener interface.
+    public void onRecipeClick(long recipeID) {
+
+        // Starts the Recipe activity.
+        Intent recipeActivityIntent = new Intent(this, RecipeActivity.class);
+        recipeActivityIntent.putExtra(START_MESSAGE, recipeID);
+        startActivity(recipeActivityIntent);
     }
 }
