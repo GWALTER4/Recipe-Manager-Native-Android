@@ -20,8 +20,7 @@ import com.example.android.recipemanagernative.RecyclerViews.RecipeAdapter;
 
 public class CategoryActivity extends AppCompatActivity implements RecipeAdapter.OnRecipeClickListener {
 
-    // Stores a string key for intent extras.
-    public static final String START_MESSAGE = "com.example.android.recipemanagernative.START_MESSAGE";
+    public static final String START_MESSAGE = "com.example.android.recipemanagernative.START_MESSAGE"; // Stores a string key for intent extras.
     private long categoryID; // ID for the category being displayed.
     private RecipeAdapter recipeAdapter; // Stores an adapter for the recycler view.
 
@@ -75,6 +74,11 @@ public class CategoryActivity extends AppCompatActivity implements RecipeAdapter
                 return true;
 
             case R.id.action_add_recipe:
+                // Creates an intent to open the AddRecipe activity.
+                Intent addRecipeIntent = new Intent(CategoryActivity.this, AddRecipeActivity.class);
+
+                // Starts the new activity.
+                startActivity(addRecipeIntent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

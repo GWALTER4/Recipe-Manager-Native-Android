@@ -29,4 +29,15 @@ public class InputCheck {
             return false;
         }
     }
+
+
+    public boolean isIngredientNameValid(String ingredientName){
+
+        if(Pattern.matches("[a-zA-Z\\s\\d]+", ingredientName)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

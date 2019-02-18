@@ -62,7 +62,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @NonNull
     public CategoryAdapter.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflates the category row view.
-        View categoryRowView = LayoutInflater.from(this.context).inflate(R.layout.category_row, parent, false);
+        View categoryRowView = LayoutInflater.from(this.context).inflate(R.layout.row_category, parent, false);
         return new CategoryViewHolder(categoryRowView, onCategoryClickListener);
     }
 

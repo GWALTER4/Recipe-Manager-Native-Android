@@ -2,4 +2,5 @@
     <dimen name="list_row_height">88dp</dimen>
     <dimen name="activity_margin">16dp</dimen>
     <dimen name="recipe_name_text_view_height">44dp</dimen>
+    <dimen name="activity_bottom_margin">16dp</dimen>
 </resources>
