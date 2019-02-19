@@ -26,7 +26,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     }
 
     // Provides a reference to the views for each data item.
-    // Provides a reference to the views for each data item.
     public static class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView recipeImageView; // Holds the image view for the recipe list item.

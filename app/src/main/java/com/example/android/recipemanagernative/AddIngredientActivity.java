@@ -75,9 +75,9 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         // Finds the EditText view and gets the string from it.
         final EditText ingredientEditText = (EditText) findViewById(R.id.edit_ingredient);
-        ingredientName = ingredientEditText.getText().toString();
+        ingredientName = ingredientEditText.getText().toString().trim();
 
-        if(InputCheck.getInstance().isIngredientNameValid(ingredientName.trim())){
+        if(InputCheck.getInstance().isIngredientNameValid(ingredientName)){
             return true;
         }
         else

@@ -3,6 +3,9 @@ package com.example.android.recipemanagernative;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,11 +16,18 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
+import com.example.android.recipemanagernative.RecyclerViews.CategoryAdapter;
+import com.example.android.recipemanagernative.RecyclerViews.IngredientAdapter;
+
+import java.util.ArrayList;
+
 public class AddRecipeActivity extends AppCompatActivity {
 
     public static final String GET_INGREDIENT_MESSAGE = "com.example.android.recipemanagernative.GET_INGREDIENT_MESSAGE"; // Stores a string key for intent extras.
     static final int GET_INGREDIENT_REQUEST = 1; // Request code for intent.
-    private TextView ingredientsList; // Text view for the ingredients list.
+    private IngredientAdapter ingredientAdapter;
+    private ArrayList<String> ingredientList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +47,15 @@ public class AddRecipeActivity extends AppCompatActivity {
             // Shows the home button.
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        // Initializes the array list.
+        ingredientList = new ArrayList<String>();
+
+        // Creates the recycler view.
+        RecyclerView ingredientRecyclerView = (RecyclerView) findViewById(R.id.ingredients_recycler_view);
+        ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ingredientAdapter = new IngredientAdapter(ingredientList);
+        ingredientRecyclerView.setAdapter(ingredientAdapter);
 
         // Sets the add ingredient button.
         ImageButton addIngredientButton = (ImageButton) findViewById(R.id.button_add_ingredient);
@@ -83,7 +102,9 @@ public class AddRecipeActivity extends AppCompatActivity {
         // Check which request is being responded to.
         if(requestCode == GET_INGREDIENT_REQUEST){
             if(resultCode == RESULT_OK){
-
+                String ingredientName = intent.getStringExtra(GET_INGREDIENT_MESSAGE);
+                ingredientList.add("• " + ingredientName);
+                ingredientAdapter.updateList(ingredientList);
             }
         }
     }
