@@ -1,9 +1,7 @@
 package com.example.android.recipemanagernative.RecyclerViews;
 
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,25 +13,43 @@ import java.util.ArrayList;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientViewHolder> {
 
-    // Stores the list of ingredients.
-    private ArrayList<String> ingredientList;
+    private ArrayList<String> ingredientList; // Stores the list of ingredients.
+    private OnIngredientClickListener onIngredientClickListener; // Stores an implementation of the OnIngredientClickListener.
+
+    public interface OnIngredientClickListener{
+        void onIngredientClick(int position);
+    }
 
     // Provides a reference to the views for each data item.
-    public static class IngredientViewHolder extends RecyclerView.ViewHolder {
+    public static class IngredientViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         private TextView ingredientNameTextView; // Holds the text view for the ingredient name.
+        private OnIngredientClickListener onIngredientClickListener; // Holds the click listener interface.
 
-        private IngredientViewHolder(View view) {
+        private IngredientViewHolder(View view, OnIngredientClickListener onIngredientClickListener) {
             super(view);
 
             // Assigns the text view.
             ingredientNameTextView = view.findViewById(R.id.text_view_ingredient_name);
+
+            // Assigns the interface.
+            this.onIngredientClickListener = onIngredientClickListener;
+
+            view.setOnLongClickListener(this);
+        }
+
+        // Handles when the view is clicked.
+        @Override
+        public boolean onLongClick(View view){
+            onIngredientClickListener.onIngredientClick((int) itemView.getTag());
+            return true;
         }
     }
 
     // Constructor for the IngredientAdapter class.
-    public IngredientAdapter(ArrayList<String> ingredientList) {
+    public IngredientAdapter(ArrayList<String> ingredientList, OnIngredientClickListener onIngredientClickListener) {
         this.ingredientList = ingredientList;
+        this.onIngredientClickListener = onIngredientClickListener;
     }
 
     // Creates new views.
@@ -43,13 +59,18 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
 
         // Inflates the ingredients row view.
         View ingredientRowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ingredient, parent, false);
-        return new IngredientViewHolder(ingredientRowView);
+        return new IngredientViewHolder(ingredientRowView, onIngredientClickListener);
     }
 
     // Replaces the contents of a view.
     @Override
     public void onBindViewHolder(@NonNull IngredientViewHolder holder, int position) {
+
+        // Sets the text view to the name of the ingredient at the current position.
         holder.ingredientNameTextView.setText(ingredientList.get(position));
+
+        // Sets the view holder tag to the position in the list so it can be deleted.
+        holder.itemView.setTag(position);
     }
 
     // Returns the size of the dataset.

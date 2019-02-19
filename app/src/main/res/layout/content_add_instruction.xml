@@ -23,14 +23,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_bottom_margin"
-        android:gravity="top|left"
+        android:gravity="top|start"
         android:fontFamily="sans-serif-light"
         android:hint="@string/hint_instruction"
         android:inputType="textMultiLine"
-        android:maxLength="500"
+        android:maxLength="1000"
         android:minLines="4"
-        android:maxLines="15"
         android:textAppearance="?android:textAppearanceMedium"
         android:text=""/>
+
+    <TextView
+        android:id="@+id/text_view_heading_duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_bottom_margin"
+        android:gravity="center|start"
+        android:text="@string/heading_duration"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/edit_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_bottom_margin"
+        android:gravity="top|start"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/hint_duration"
+        android:inputType="number"
+        android:maxLength="4"
+        android:textAppearance="?android:textAppearanceMedium" />
 
 </LinearLayout>
