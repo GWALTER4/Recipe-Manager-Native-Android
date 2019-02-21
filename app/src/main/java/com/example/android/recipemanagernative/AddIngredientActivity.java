@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 public class AddIngredientActivity extends AppCompatActivity {
 
-    private String ingredientName;
+    private String ingredientName; // Name of the ingredient.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +54,7 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.action_confirm_ingredient:
-                boolean ingredientValid = confirmIngredient();
-                if(ingredientValid){
+                if(confirmIngredient()){
                     Toast.makeText(this, "Ingredient added",Toast.LENGTH_SHORT).show();
                     Intent confirmIngredientIntent = new Intent();
                     confirmIngredientIntent.putExtra(AddRecipeActivity.GET_INGREDIENT_MESSAGE, ingredientName);

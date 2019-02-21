@@ -6,11 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddInstructionActivity extends AppCompatActivity {
 
-    private String instructionText;
+    private String instructionText; // Stores the text of the instruction.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +54,31 @@ public class AddInstructionActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.action_confirm_ingredient:
+                if(isInstructionValid()){
+                    // Displays a toast message to the user.
+                    Toast.makeText(this, "Instruction added",Toast.LENGTH_SHORT).show();
+
+                    // Creates an intent to send the data back to the add recipe activity.
+                    Intent confirmInstructionIntent = new Intent();
+                    confirmInstructionIntent.putExtra(AddRecipeActivity.GET_INSTRUCTION_MESSAGE, instructionText);
+                    setResult(AddRecipeActivity.RESULT_OK, confirmInstructionIntent);
+                    finish();
+                    return true;
+                }
+                else{
+                    Toast.makeText(this, "Invalid instruction",Toast.LENGTH_SHORT).show();
+                }
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isInstructionValid(){
+
+        // Finds the EditText view and gets the string from it.
+        final EditText instructionEditText = (EditText) findViewById(R.id.edit_instruction);
+        instructionText = instructionEditText.getText().toString().trim();
+
+        return InputCheck.getInstance().isInstructionTextValid(instructionText);
     }
 }

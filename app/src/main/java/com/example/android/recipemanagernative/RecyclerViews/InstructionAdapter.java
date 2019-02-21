@@ -69,7 +69,7 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
     public void onBindViewHolder(@NonNull InstructionViewHolder holder, int position) {
 
         // Sets the text view to the current position.
-        holder.instructionNumberTextView.setText(position);
+        holder.instructionNumberTextView.setText(String.valueOf(position + 1));
 
         // Sets the text view to the description of the instruction at the current position.
         holder.instructionDescriptionTextView.setText(instructionList.get(position));
@@ -78,7 +78,7 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
         holder.itemView.setTag(position);
     }
 
-    // Returns the size of the dataset.
+    // Returns the size of the dataset.6
     @Override
     public int getItemCount() {
         return instructionList.size();

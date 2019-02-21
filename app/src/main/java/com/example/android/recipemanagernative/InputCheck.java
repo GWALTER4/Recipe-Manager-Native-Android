@@ -19,25 +19,21 @@ public class InputCheck {
 
     // Checks if a category name contains valid characters.
     public boolean isCategoryNameValid(String categoryName){
-
         // Uses a regex that only allows alphabetical characters and spaces to
         // validate the user's inputted category name.
-        if(Pattern.matches("[a-zA-Z\\s]+",categoryName)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return Pattern.matches("[a-zA-Z\\s]+",categoryName);
     }
 
 
     public boolean isIngredientNameValid(String ingredientName){
+        // Uses a regex that only allows alphabetical characters, spaces, and digits to
+        // validate the user's inputted ingredient name.
+        return Pattern.matches("[a-zA-Z\\s\\d]+", ingredientName);
+    }
 
-        if(Pattern.matches("[a-zA-Z\\s\\d]+", ingredientName)){
-            return true;
-        }
-        else{
-            return false;
-        }
+    public boolean isInstructionTextValid(String instructionText){
+        // Uses a regex that only allows alphabetical characters, spaces, digits,
+        // and common punctuation to validate the user's inputted instruction text.
+        return Pattern.matches("[a-zA-Z\\s\\d()\\-.,]+", instructionText);
     }
 }

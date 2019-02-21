@@ -12,9 +12,9 @@
 
     <TextView
         android:id="@+id/text_view_instruction_number"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/ingredient_row_height"
-        android:layout_weight="0.90"
+        android:layout_marginEnd="@dimen/activity_margin"
         android:gravity="center|start"
         android:maxLength="2"
         android:maxLines="1"
@@ -23,9 +23,10 @@
 
     <TextView
         android:id="@+id/text_view_instruction_preview"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/ingredient_row_height"
-        android:layout_weight="0.1"
+        android:layout_marginEnd="@dimen/activity_margin"
+        android:layout_weight="1"
         android:gravity="center|start"
         android:maxLines="1"
         android:textColor="@color/colorText"
