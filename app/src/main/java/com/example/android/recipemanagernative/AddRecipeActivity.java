@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.android.recipemanagernative.RecyclerViews.IngredientAdapter;
 import com.example.android.recipemanagernative.RecyclerViews.InstructionAdapter;
@@ -30,6 +31,7 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
     private ArrayList<String> instructionList;
     private int deletePosition;
     private int listToDelete;
+    private TextView totalInstructionsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,9 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
             }
         });
 
+        // Sets the total instructions text view.
+        totalInstructionsTextView = (TextView) findViewById(R.id.text_view_total_instructions_count);
+        totalInstructionsTextView.setText(String.valueOf(instructionList.size()));
     }
 
     @Override
@@ -137,6 +142,7 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
                 else{
                     instructionList.remove(deletePosition);
                     updateInstructionList(instructionList);
+                    totalInstructionsTextView.setText(String.valueOf(instructionList.size()));
                 }
             }
         });
@@ -169,6 +175,7 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
                 String instructionText = intent.getStringExtra(GET_INSTRUCTION_MESSAGE);
                 instructionList.add(instructionText);
                 updateInstructionList(instructionList);
+                totalInstructionsTextView.setText(String.valueOf(instructionList.size()));
             }
         }
     }
