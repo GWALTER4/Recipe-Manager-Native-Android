@@ -126,6 +126,7 @@ public class CategoryActivity extends AppCompatActivity implements RecipeAdapter
         return true;
     }
 
+    // MVC
     // Finds the category title corresponding to the supplied category ID.
     private String findCategoryTitle(long categoryID){
 

@@ -31,10 +31,13 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
     private long categoryID; // The category ID of the category the recipe will be added to.
     private IngredientAdapter ingredientAdapter;
     private InstructionAdapter instructionAdapter;
+
+    // MVC
     private ArrayList<String> ingredientList;
     private ArrayList<String> instructionList;
     private int deletePosition;
     private int listToDelete;
+
     private TextView totalInstructionsTextView;
 
     @Override

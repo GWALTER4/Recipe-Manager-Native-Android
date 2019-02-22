@@ -74,10 +74,10 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         // Finds the EditText view and gets the string from it.
         final EditText categoryNameEditText = (EditText) findViewById(R.id.edit_category_name);
-        String categoryName = categoryNameEditText.getText().toString();
+        String categoryName = categoryNameEditText.getText().toString().trim();
 
         // Checks if the category name is valid.
-        if(InputCheck.getInstance().isCategoryNameValid(categoryName.trim())){
+        if(InputCheck.getInstance().isCategoryNameValid(categoryName)){
             long newRowId = RecipeManagerDbHelper.getInstance(this).insertCategory(categoryName);
 
             // Checks if the category name was inserted into the database.
