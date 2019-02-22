@@ -16,7 +16,7 @@ import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
 public class MainActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryClickListener {
 
     // Stores a string key for intent extras.
-    public static final String START_MESSAGE = "com.example.android.recipemanagernative.START_MESSAGE";
+    public static final String START_MESSAGE = "com.example.android.recipemanagernative.START_RECIPE_MESSAGE";
 
     // Stores an adapter for the recycler view.
     private CategoryAdapter categoryAdapter;

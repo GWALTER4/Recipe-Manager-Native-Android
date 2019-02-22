@@ -108,7 +108,7 @@ public final class RecipeManagerContract {
                 RecipeEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 RecipeEntry.CATEGORY_ID + " INTEGER NOT NULL," +
                 RecipeEntry.COLUMN_RECIPE_NAME + " TEXT NOT NULL," +
-                RecipeEntry.COLUMN_IMAGE_URI + " TEXT NOT NULL," +
+                RecipeEntry.COLUMN_IMAGE_URI + " INTEGER NOT NULL," +
                 RecipeEntry.COLUMN_INGREDIENTS_LIST + " TEXT NOT NULL," +
                 RecipeEntry.COLUMN_INSTRUCTION_COUNT + " INTEGER NOT NULL," +
                 RecipeEntry.COLUMN_TOTAL_DURATION + " INTEGER NOT NULL," +

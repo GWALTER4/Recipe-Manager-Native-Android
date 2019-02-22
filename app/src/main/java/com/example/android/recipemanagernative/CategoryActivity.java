@@ -15,12 +15,12 @@ import android.view.MenuItem;
 
 import com.example.android.recipemanagernative.Database.RecipeManagerContract;
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
-import com.example.android.recipemanagernative.RecyclerViews.CategoryAdapter;
 import com.example.android.recipemanagernative.RecyclerViews.RecipeAdapter;
 
 public class CategoryActivity extends AppCompatActivity implements RecipeAdapter.OnRecipeClickListener {
 
-    public static final String START_MESSAGE = "com.example.android.recipemanagernative.START_MESSAGE"; // Stores a string key for intent extras.
+    public static final String START_RECIPE_MESSAGE = "com.example.android.recipemanagernative.START_RECIPE_MESSAGE"; // Stores a string key for intent extras.
+    public static final String START_ADD_RECIPE_MESSAGE = "com.example.android.recipemanagernative.START_ADD_RECIPE_MESSAGE"; // Stores a string key for intent extras.
     private long categoryID; // ID for the category being displayed.
     private RecipeAdapter recipeAdapter; // Stores an adapter for the recycler view.
 
@@ -58,6 +58,12 @@ public class CategoryActivity extends AppCompatActivity implements RecipeAdapter
     }
 
     @Override
+    protected void onStart(){
+        super.onStart();
+        recipeAdapter.updateCursor(RecipeManagerDbHelper.getInstance(this).findRecipes(categoryID));
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_category, menu);
         return true;
@@ -76,8 +82,7 @@ public class CategoryActivity extends AppCompatActivity implements RecipeAdapter
             case R.id.action_add_recipe:
                 // Creates an intent to open the AddRecipe activity.
                 Intent addRecipeIntent = new Intent(CategoryActivity.this, AddRecipeActivity.class);
-
-                // Starts the new activity.
+                addRecipeIntent.putExtra(START_ADD_RECIPE_MESSAGE, categoryID);
                 startActivity(addRecipeIntent);
                 return true;
         }
@@ -141,7 +146,7 @@ public class CategoryActivity extends AppCompatActivity implements RecipeAdapter
 
         // Starts the Recipe activity.
         Intent recipeActivityIntent = new Intent(this, RecipeActivity.class);
-        recipeActivityIntent.putExtra(START_MESSAGE, recipeID);
+        recipeActivityIntent.putExtra(START_RECIPE_MESSAGE, recipeID);
         startActivity(recipeActivityIntent);
     }
 }

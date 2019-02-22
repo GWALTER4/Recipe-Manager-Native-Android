@@ -6,6 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.android.recipemanagernative.R;
+import com.example.android.recipemanagernative.Recipe;
+
+import java.util.List;
+
 public class RecipeManagerDbHelper extends SQLiteOpenHelper {
 
     // Stores an instance of the RecipeManagerDbHelper class.
@@ -126,6 +131,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
                 RecipeManagerContract.RecipeEntry.ID,
                 RecipeManagerContract.RecipeEntry.CATEGORY_ID,
                 RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME,
+                RecipeManagerContract.RecipeEntry.COLUMN_INGREDIENTS_LIST,
                 RecipeManagerContract.RecipeEntry.COLUMN_INSTRUCTION_COUNT,
                 RecipeManagerContract.RecipeEntry.COLUMN_TOTAL_DURATION
         };
@@ -144,5 +150,30 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
+    }
+
+    // Inserts a recipe into the database.
+    public long insertRecipe(long categoryID, Recipe recipe){
+        ContentValues values = new ContentValues();
+        values.put(RecipeManagerContract.RecipeEntry.CATEGORY_ID, categoryID);
+        values.put(RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME, recipe.getRecipeName());
+        values.put(RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_URI, 1);
+        values.put(RecipeManagerContract.RecipeEntry.COLUMN_INGREDIENTS_LIST, concatIngredientsList(recipe.getIngredientsList()));
+        values.put(RecipeManagerContract.RecipeEntry.COLUMN_INSTRUCTION_COUNT, recipe.getTotalInstructions());
+        values.put(RecipeManagerContract.RecipeEntry.COLUMN_TOTAL_DURATION, recipe.getDuration());
+
+        return writeDB.insert(RecipeManagerContract.RecipeEntry.TABLE_NAME, null, values);
+    }
+
+    // Concatenates all ingredients list items into one string for easier storage.
+    public String concatIngredientsList(List<String> ingredientsList){
+
+        String ingredients = "";
+
+        for(int i = 0; i < ingredientsList.size(); i++){
+            ingredients = ingredients + ingredientsList.get(i) + ",";
+        }
+
+        return ingredients;
     }
 }

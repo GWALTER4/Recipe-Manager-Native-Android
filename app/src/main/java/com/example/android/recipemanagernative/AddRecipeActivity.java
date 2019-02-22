@@ -11,9 +11,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
 import com.example.android.recipemanagernative.RecyclerViews.IngredientAdapter;
 import com.example.android.recipemanagernative.RecyclerViews.InstructionAdapter;
 
@@ -25,6 +28,7 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
     public static final String GET_INSTRUCTION_MESSAGE = "com.example.android.recipemanagernative.GET_INSTRUCTION_MESSAGE"; // Stores a string key for intent extras.
     static final int GET_INGREDIENT_REQUEST = 1; // Request code for intent.
     static final int GET_INSTRUCTION_REQUEST = 2; // Request code for intent.
+    private long categoryID; // The category ID of the category the recipe will be added to.
     private IngredientAdapter ingredientAdapter;
     private InstructionAdapter instructionAdapter;
     private ArrayList<String> ingredientList;
@@ -36,6 +40,12 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Gets the intent that starts this activity.
+        Intent addRecipeActivityIntent = getIntent();
+
+        // Gets the extras from the starting activity.
+        categoryID = addRecipeActivityIntent.getLongExtra(CategoryActivity.START_ADD_RECIPE_MESSAGE, -1);
 
         // Inflates the activity layout.
         setContentView(R.layout.activity_add_recipe);
@@ -118,6 +128,18 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
 
         switch (item.getItemId()) {
             case R.id.action_confirm_recipe:
+                int code = confirmRecipe();
+                if(code == 1){
+                    Toast.makeText(this, "Recipe added",Toast.LENGTH_SHORT).show();
+                    finish();
+                    return true;
+                }
+                else if(code == 0){
+                    Toast.makeText(this, "Invalid recipe",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(this, "Database error",Toast.LENGTH_SHORT).show();
+                }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -206,5 +228,31 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
         createDeleteDialog().show();
     }
 
+    private int confirmRecipe(){
+        // Finds the EditText views and gets the strings from them.
+        final EditText recipeNameEditText = (EditText) findViewById(R.id.edit_recipe_name);
+        String recipeName = recipeNameEditText.getText().toString().trim();
+
+        // Finds the EditText views and gets the strings from them.
+        final EditText durationEditText = (EditText) findViewById(R.id.edit_duration);
+        String duration = durationEditText.getText().toString();
+
+        // Checks if the category name is valid.
+        if(InputCheck.getInstance().isRecipeValid(recipeName,ingredientList.size(), instructionList.size(), duration)){
+            Recipe recipe = new Recipe(categoryID, recipeName, ingredientList, instructionList, Integer.valueOf(duration));
+            long newRowId = RecipeManagerDbHelper.getInstance(this).insertRecipe(categoryID, recipe);
+
+            // Checks if the recipe was inserted into the database.
+            // -1 == error, 1 == inserted.
+            if(newRowId != -1){
+                return 1; // Recipe added.
+            } else {
+                return -1; // Database error.
+            }
+        }
+        else{
+            return 0; // Invalid recipe.
+        }
+    }
 
 }

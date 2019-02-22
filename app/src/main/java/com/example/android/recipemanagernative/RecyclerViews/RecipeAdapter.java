@@ -85,17 +85,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         }
 
         // Gets the date from the cursor.
-        String recipeImageURI = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_URI));
         String recipeName = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME));
         int recipeSteps = cursor.getInt(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_INSTRUCTION_COUNT));
         int recipeDuration = cursor.getInt(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_TOTAL_DURATION));
         long recipeID = cursor.getLong(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.ID));
 
         // Sets the views with the data from the cursor.
-        holder.recipeImageView.setImageURI(Uri.parse(recipeImageURI));
         holder.recipeNameTextView.setText(recipeName);
-        holder.recipeStepsTextView.setText(recipeSteps);
-        holder.recipeDurationTextView.setText(recipeDuration);
+        holder.recipeStepsTextView.setText(String.valueOf(recipeSteps + " Steps"));
+        holder.recipeDurationTextView.setText(String.valueOf(recipeDuration + " Minutes"));
         holder.itemView.setTag(recipeID);
     }
 
