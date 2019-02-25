@@ -126,19 +126,12 @@ public class CategoryActivity extends AppCompatActivity implements RecipeAdapter
         return true;
     }
 
-    // MVC
     // Finds the category title corresponding to the supplied category ID.
     private String findCategoryTitle(long categoryID){
 
-        // Gets a cursor from the database.
-        Cursor cursor = RecipeManagerDbHelper.getInstance(this).findCategoryName(categoryID);
+        // Gets the category name from the database.
+        return RecipeManagerDbHelper.getInstance(this).findCategoryName(categoryID);
 
-        if(cursor != null && cursor.moveToFirst()) {
-            String categoryName = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME));
-            cursor.close();
-            return categoryName;
-        }
-        return "Error";
     }
 
     @Override

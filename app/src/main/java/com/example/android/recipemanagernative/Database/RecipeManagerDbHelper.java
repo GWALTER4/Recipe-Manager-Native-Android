@@ -94,7 +94,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     }
 
     // Finds the name of a category corresponding to the supplied category ID.
-    public Cursor findCategoryName(Long categoryID){
+    public String findCategoryName(Long categoryID){
 
         // Defines a projection.
         String[] projection = {
@@ -105,7 +105,8 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         String selection = RecipeManagerContract.CategoryEntry.ID + " = ?";
         String[] selectionArgs = {categoryID.toString()};
 
-        return readDB.query(
+        // Gets a cursor from the database.
+        Cursor cursor =  readDB.query(
                 RecipeManagerContract.CategoryEntry.TABLE_NAME,
                 projection,
                 selection,
@@ -114,6 +115,14 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
+
+        if(cursor != null && cursor.moveToFirst()) {
+            String categoryName = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.CategoryEntry.COLUMN_CATEGORY_NAME));
+            cursor.close();
+            return categoryName;
+        }
+
+        return "Error";
     }
 
     // Deletes a category.

@@ -29,14 +29,11 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
     static final int GET_INGREDIENT_REQUEST = 1; // Request code for intent.
     static final int GET_INSTRUCTION_REQUEST = 2; // Request code for intent.
     private long categoryID; // The category ID of the category the recipe will be added to.
-    private IngredientAdapter ingredientAdapter;
-    private InstructionAdapter instructionAdapter;
-
-    // MVC
-    private ArrayList<String> ingredientList;
-    private ArrayList<String> instructionList;
-    private int deletePosition;
-    private int listToDelete;
+    private IngredientAdapter ingredientAdapter; // Adapter for the ingredients recycler view.
+    private InstructionAdapter instructionAdapter; // Adapter for the instruction recycler view.
+    private AddRecipeListsManager addRecipeListsManager; // Manager class for the ingredients and instruction lists.
+    private int deletePosition; // Stores the position of an item the user wants to delete.
+    private int listToDelete; // Stores the list an item selected by the user to be deleted belongs to.
 
     private TextView totalInstructionsTextView;
 
@@ -65,20 +62,20 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        // Initializes the array lists.
-        ingredientList = new ArrayList<String>();
-        instructionList = new ArrayList<String>();
+        // Creates an instance of the AddRecipeListsManager class to
+        // manage the ingredients and instruction lists.
+        addRecipeListsManager = new AddRecipeListsManager();
 
         // Creates the ingredients recycler view.
         RecyclerView ingredientRecyclerView = (RecyclerView) findViewById(R.id.ingredients_recycler_view);
         ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ingredientAdapter = new IngredientAdapter(ingredientList, this);
+        ingredientAdapter = new IngredientAdapter(addRecipeListsManager.getIngredientList(), this);
         ingredientRecyclerView.setAdapter(ingredientAdapter);
 
         // Creates the instructions recycler view.
         RecyclerView instructionsRecyclerView = (RecyclerView) findViewById(R.id.instructions_recycler_view);
         instructionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        instructionAdapter = new InstructionAdapter(instructionList, this);
+        instructionAdapter = new InstructionAdapter(addRecipeListsManager.getInstructionList(), this);
         instructionsRecyclerView.setAdapter(instructionAdapter);
 
         // Sets the add ingredient button.
@@ -107,7 +104,7 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
 
         // Sets the total instructions text view.
         totalInstructionsTextView = (TextView) findViewById(R.id.text_view_total_instructions_count);
-        totalInstructionsTextView.setText(String.valueOf(instructionList.size()));
+        totalInstructionsTextView.setText(String.valueOf(addRecipeListsManager.getInstructionList().size()));
     }
 
     @Override
@@ -161,13 +158,13 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
             public void onClick(DialogInterface dialog, int which) {
 
                 if(listToDelete == 1){
-                    ingredientList.remove(deletePosition);
-                    updateIngredientList(ingredientList);
+                    addRecipeListsManager.removeIngredient(deletePosition);
+                    updateIngredientList();
                 }
                 else{
-                    instructionList.remove(deletePosition);
-                    updateInstructionList(instructionList);
-                    totalInstructionsTextView.setText(String.valueOf(instructionList.size()));
+                    addRecipeListsManager.removeInstruction(deletePosition);
+                    updateInstructionList();
+                    totalInstructionsTextView.setText(String.valueOf(addRecipeListsManager.getInstructionList().size()));
                 }
             }
         });
@@ -191,30 +188,29 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
         if(requestCode == GET_INGREDIENT_REQUEST){
             if(resultCode == RESULT_OK){
                 String ingredientName = intent.getStringExtra(GET_INGREDIENT_MESSAGE);
-                ingredientList.add("• " + ingredientName);
-                updateIngredientList(ingredientList);
+                addRecipeListsManager.addIngredient("• " + ingredientName);
+                updateIngredientList();
             }
         }
         else if(requestCode == GET_INSTRUCTION_REQUEST){
             if(resultCode == RESULT_OK){
                 String instructionText = intent.getStringExtra(GET_INSTRUCTION_MESSAGE);
-                instructionList.add(instructionText);
-                updateInstructionList(instructionList);
-                totalInstructionsTextView.setText(String.valueOf(instructionList.size()));
+                addRecipeListsManager.addInstruction(instructionText);
+                updateInstructionList();
+                totalInstructionsTextView.setText(String.valueOf(addRecipeListsManager.getInstructionList().size()));
             }
         }
     }
 
     // Updates the ingredient list in the ingredient adapter.
-    private void updateIngredientList(ArrayList<String> ingredientList){
-        ingredientAdapter.updateList(ingredientList);
+    private void updateIngredientList(){
+        ingredientAdapter.updateList(addRecipeListsManager.getIngredientList());
     }
 
-    // Updates the instruction list in the instruction adapter.
-    private void updateInstructionList(ArrayList<String> instructionList){
-        instructionAdapter.updateList(instructionList);
+    private void updateInstructionList(){
+        instructionAdapter.updateList(addRecipeListsManager.getInstructionList());
     }
-
+    
     // Overrides the implementation in the IngredientAdapter.OnIngredientClickListener interface.
     @Override
     public void onIngredientClick(int position){
@@ -223,6 +219,7 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
         createDeleteDialog().show();
     }
 
+    // MVC
     // Overrides the implementation in the InstructionAdapter.OnInstructionClickListener interface.
     @Override
     public void onInstructionClick(int position){
@@ -241,8 +238,9 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
         String duration = durationEditText.getText().toString();
 
         // Checks if the category name is valid.
-        if(InputCheck.getInstance().isRecipeValid(recipeName,ingredientList.size(), instructionList.size(), duration)){
-            Recipe recipe = new Recipe(categoryID, recipeName, ingredientList, instructionList, Integer.valueOf(duration));
+        if(InputCheck.getInstance().isRecipeValid(recipeName,addRecipeListsManager.getIngredientList().size(), addRecipeListsManager.getInstructionList().size(), duration)){
+
+            Recipe recipe = new Recipe(categoryID, recipeName, addRecipeListsManager.getIngredientList(), addRecipeListsManager.getInstructionList(), Integer.valueOf(duration));
             long newRowId = RecipeManagerDbHelper.getInstance(this).insertRecipe(categoryID, recipe);
 
             // Checks if the recipe was inserted into the database.
@@ -252,10 +250,9 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
             } else {
                 return -1; // Database error.
             }
-        }
-        else{
-            return 0; // Invalid recipe.
-        }
+            }
+            else{
+                return 0; // Invalid recipe.
+            }
     }
-
 }
