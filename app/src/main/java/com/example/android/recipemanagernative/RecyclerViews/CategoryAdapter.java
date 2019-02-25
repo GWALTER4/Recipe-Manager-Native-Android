@@ -14,7 +14,6 @@ import com.example.android.recipemanagernative.R;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
-    private Context context; // Holds the application context.
     private Cursor cursor; // Holds a cursor object.
     private OnCategoryClickListener onCategoryClickListener; // Stores an implementation of the OnCategoryClickListener
 
@@ -51,8 +50,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     // Constructor for the CategoryAdapter class.
-    public CategoryAdapter(Context context, Cursor cursor, OnCategoryClickListener onCategoryClickListener){
-        this.context = context;
+    public CategoryAdapter(Cursor cursor, OnCategoryClickListener onCategoryClickListener){
         this.cursor = cursor;
         this.onCategoryClickListener = onCategoryClickListener;
     }
@@ -62,7 +60,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @NonNull
     public CategoryAdapter.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflates the category row view.
-        View categoryRowView = LayoutInflater.from(this.context).inflate(R.layout.row_category, parent, false);
+        View categoryRowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_category, parent, false);
         return new CategoryViewHolder(categoryRowView, onCategoryClickListener);
     }
 

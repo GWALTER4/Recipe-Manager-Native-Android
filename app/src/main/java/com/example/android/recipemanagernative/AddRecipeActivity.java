@@ -17,20 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
-import com.example.android.recipemanagernative.RecyclerViews.IngredientAdapter;
-import com.example.android.recipemanagernative.RecyclerViews.InstructionAdapter;
+import com.example.android.recipemanagernative.RecyclerViews.AddIngredientAdapter;
+import com.example.android.recipemanagernative.RecyclerViews.AddInstructionAdapter;
 
-import java.util.ArrayList;
-
-public class AddRecipeActivity extends AppCompatActivity implements IngredientAdapter.OnIngredientClickListener, InstructionAdapter.OnInstructionClickListener {
+public class AddRecipeActivity extends AppCompatActivity implements AddIngredientAdapter.OnIngredientClickListener, AddInstructionAdapter.OnInstructionClickListener {
 
     public static final String GET_INGREDIENT_MESSAGE = "com.example.android.recipemanagernative.GET_INGREDIENT_MESSAGE"; // Stores a string key for intent extras.
     public static final String GET_INSTRUCTION_MESSAGE = "com.example.android.recipemanagernative.GET_INSTRUCTION_MESSAGE"; // Stores a string key for intent extras.
     static final int GET_INGREDIENT_REQUEST = 1; // Request code for intent.
     static final int GET_INSTRUCTION_REQUEST = 2; // Request code for intent.
     private long categoryID; // The category ID of the category the recipe will be added to.
-    private IngredientAdapter ingredientAdapter; // Adapter for the ingredients recycler view.
-    private InstructionAdapter instructionAdapter; // Adapter for the instruction recycler view.
+    private AddIngredientAdapter ingredientAdapter; // Adapter for the ingredients recycler view.
+    private AddInstructionAdapter instructionAdapter; // Adapter for the instruction recycler view.
     private AddRecipeListsManager addRecipeListsManager; // Manager class for the ingredients and instruction lists.
     private int deletePosition; // Stores the position of an item the user wants to delete.
     private int listToDelete; // Stores the list an item selected by the user to be deleted belongs to.
@@ -69,13 +67,13 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
         // Creates the ingredients recycler view.
         RecyclerView ingredientRecyclerView = (RecyclerView) findViewById(R.id.ingredients_recycler_view);
         ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ingredientAdapter = new IngredientAdapter(addRecipeListsManager.getIngredientList(), this);
+        ingredientAdapter = new AddIngredientAdapter(addRecipeListsManager.getIngredientList(), this);
         ingredientRecyclerView.setAdapter(ingredientAdapter);
 
         // Creates the instructions recycler view.
         RecyclerView instructionsRecyclerView = (RecyclerView) findViewById(R.id.instructions_recycler_view);
         instructionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        instructionAdapter = new InstructionAdapter(addRecipeListsManager.getInstructionList(), this);
+        instructionAdapter = new AddInstructionAdapter(addRecipeListsManager.getInstructionList(), this);
         instructionsRecyclerView.setAdapter(instructionAdapter);
 
         // Sets the add ingredient button.
@@ -211,7 +209,7 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
         instructionAdapter.updateList(addRecipeListsManager.getInstructionList());
     }
     
-    // Overrides the implementation in the IngredientAdapter.OnIngredientClickListener interface.
+    // Overrides the implementation in the AddIngredientAdapter.OnIngredientClickListener interface.
     @Override
     public void onIngredientClick(int position){
         deletePosition = position;
@@ -220,7 +218,7 @@ public class AddRecipeActivity extends AppCompatActivity implements IngredientAd
     }
 
     // MVC
-    // Overrides the implementation in the InstructionAdapter.OnInstructionClickListener interface.
+    // Overrides the implementation in the AddInstructionAdapter.OnInstructionClickListener interface.
     @Override
     public void onInstructionClick(int position){
         deletePosition = position;

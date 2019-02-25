@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
         // Creates the recycler view.
         RecyclerView categoryRecyclerView = (RecyclerView) findViewById(R.id.category_recycler_view);
         categoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        categoryAdapter = new CategoryAdapter(this, RecipeManagerDbHelper.getInstance(this).findCategories(), this);
+        categoryAdapter = new CategoryAdapter(RecipeManagerDbHelper.getInstance(this).findCategories(), this);
         categoryRecyclerView.setAdapter(categoryAdapter);
 
         // Adds a separator to the recycler view.

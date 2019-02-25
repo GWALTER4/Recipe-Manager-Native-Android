@@ -11,7 +11,7 @@ import com.example.android.recipemanagernative.R;
 
 import java.util.ArrayList;
 
-public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientViewHolder> {
+public class AddIngredientAdapter extends RecyclerView.Adapter<AddIngredientAdapter.IngredientItemViewHolder> {
 
     private ArrayList<String> ingredientList; // Stores the list of ingredients.
     private OnIngredientClickListener onIngredientClickListener; // Stores an implementation of the OnIngredientClickListener.
@@ -21,12 +21,12 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     }
 
     // Provides a reference to the views for each data item.
-    public static class IngredientViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    public static class IngredientItemViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         private TextView ingredientNameTextView; // Holds the text view for the ingredient name.
         private OnIngredientClickListener onIngredientClickListener; // Holds the click listener interface.
 
-        private IngredientViewHolder(View view, OnIngredientClickListener onIngredientClickListener) {
+        private IngredientItemViewHolder(View view, OnIngredientClickListener onIngredientClickListener) {
             super(view);
 
             // Assigns the text view.
@@ -46,8 +46,8 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         }
     }
 
-    // Constructor for the IngredientAdapter class.
-    public IngredientAdapter(ArrayList<String> ingredientList, OnIngredientClickListener onIngredientClickListener) {
+    // Constructor for the AddIngredientAdapter class.
+    public AddIngredientAdapter(ArrayList<String> ingredientList, OnIngredientClickListener onIngredientClickListener) {
         this.ingredientList = ingredientList;
         this.onIngredientClickListener = onIngredientClickListener;
     }
@@ -55,16 +55,16 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     // Creates new views.
     @Override
     @NonNull
-    public IngredientAdapter.IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public IngredientItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         // Inflates the ingredients row view.
-        View ingredientRowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ingredient, parent, false);
-        return new IngredientViewHolder(ingredientRowView, onIngredientClickListener);
+        View ingredientRowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ingredient_item, parent, false);
+        return new IngredientItemViewHolder(ingredientRowView, onIngredientClickListener);
     }
 
     // Replaces the contents of a view.
     @Override
-    public void onBindViewHolder(@NonNull IngredientViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull IngredientItemViewHolder holder, int position) {
 
         // Sets the text view to the name of the ingredient at the current position.
         holder.ingredientNameTextView.setText(ingredientList.get(position));

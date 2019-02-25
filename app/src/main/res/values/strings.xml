@@ -5,12 +5,14 @@
     <string name="action_confirm_category">Confirm category</string>
     <string name="action_confirm_recipe">Confirm recipe</string>
     <string name="action_confirm_ingredient">Confirm ingredient</string>
-    <string name="action_add_recipe">Add Recipe</string>
+    <string name="action_add_recipe">Add recipe</string>
+    <string name="action_delete_recipe">Delete recipe</string>
     <string name="title_add_category_activity">Add a Category</string>
     <string name="title_category_activity">Category</string>
     <string name="title_add_recipe_activity">Add a Recipe</string>
     <string name="title_add_instruction_activity">Add an instruction</string>
     <string name="title_add_ingredient_activity">Add an ingredient</string>
+    <string name="title_recipe_activity">Recipe</string>
     <string name="hint_category_name">Category name</string>
     <string name="hint_recipe_name">Recipe name</string>
     <string name="hint_instruction">Enter your instruction here...</string>
@@ -21,6 +23,8 @@
     <string name="dialog_delete_category_message">Are you sure you want to delete the category?</string>
     <string name="dialog_delete_list_item">Delete list item</string>
     <string name="dialog_delete_list_item_message">Are you sure you want to delete this item?</string>
+    <string name="dialog_delete_recipe_title">Delete recipe</string>
+    <string name="dialog_delete_recipe_message">Are you sure you want to delete the recipe?</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="heading_recipe_name">Recipe name:</string>

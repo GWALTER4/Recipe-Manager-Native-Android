@@ -74,7 +74,7 @@ public class CategoryActivity extends AppCompatActivity implements RecipeAdapter
 
         switch (item.getItemId()) {
 
-            case R.id.action_settings:
+            case R.id.action_delete_category:
                 // Shows the delete category dialog.
                 createDeleteDialog().show();
                 return true;

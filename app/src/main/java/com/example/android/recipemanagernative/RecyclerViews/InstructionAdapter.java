@@ -1,5 +1,6 @@
 package com.example.android.recipemanagernative.RecyclerViews;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,51 +8,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.recipemanagernative.Database.RecipeManagerContract;
 import com.example.android.recipemanagernative.R;
 
 import java.util.ArrayList;
 
 public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.InstructionViewHolder> {
 
-    private ArrayList<String> instructionList; // Stores the list of instruction.
-    private OnInstructionClickListener onInstructionClickListener; // Stores an implementation of the OnInstructionClickListener.
-
-    public interface OnInstructionClickListener{
-        void onInstructionClick(int position);
-    }
+    private Cursor cursor; // Holds a cursor object.
 
     // Provides a reference to the views for each data item.
-    public static class InstructionViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    public static class InstructionViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView instructionNumberTextView; // Holds the text view for the instruction number.
         private TextView instructionDescriptionTextView; // Holds the text view for the instruction description.
-        private OnInstructionClickListener onInstructionClickListener; // Holds the click listener interface.
 
-        private InstructionViewHolder(View view, OnInstructionClickListener onInstructionClickListener) {
+        private InstructionViewHolder(View view) {
             super(view);
 
-            // Assigns the text views.
-            instructionNumberTextView = view.findViewById(R.id.text_view_instruction_number);
-            instructionDescriptionTextView = view.findViewById(R.id.text_view_instruction_preview);
+            // Assigns the text view.
+            instructionDescriptionTextView = view.findViewById(R.id.text_view_instruction_description);
 
-            // Assigns the interface.
-            this.onInstructionClickListener = onInstructionClickListener;
-
-            view.setOnLongClickListener(this);
-        }
-
-        // Handles when the view is clicked.
-        @Override
-        public boolean onLongClick(View view){
-            onInstructionClickListener.onInstructionClick((int) itemView.getTag());
-            return true;
         }
     }
 
-    // Constructor for the IngredientAdapter class.
-    public InstructionAdapter(ArrayList<String> instructionList, OnInstructionClickListener onInstructionClickListener) {
-        this.instructionList = instructionList;
-        this.onInstructionClickListener = onInstructionClickListener;
+    // Constructor for the InstructionAdapter class.
+    public InstructionAdapter(Cursor cursor) {
+        this.cursor = cursor;
     }
 
     // Creates new views.
@@ -61,39 +43,44 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
 
         // Inflates the ingredients row view.
         View instructionRowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_instruction, parent, false);
-        return new InstructionViewHolder(instructionRowView, onInstructionClickListener);
+        return new InstructionViewHolder(instructionRowView);
     }
 
     // Replaces the contents of a view.
     @Override
     public void onBindViewHolder(@NonNull InstructionViewHolder holder, int position) {
 
-        // Sets the text view to the current position.
-        holder.instructionNumberTextView.setText(String.valueOf(position + 1));
-
-        // Sets the text view to the description of the instruction at the current position.
-        holder.instructionDescriptionTextView.setText(instructionList.get(position));
-
-        // Sets the view holder tag to the position in the list so it can be deleted.
-        holder.itemView.setTag(position);
-    }
-
-    // Returns the size of the dataset.6
-    @Override
-    public int getItemCount() {
-        return instructionList.size();
-    }
-
-    // Updates the list with new data.
-    public void updateList(ArrayList<String> instructionList){
-
-        // Assigns the new ingredient list if it is not empty.
-        if(instructionList != null) {
-            this.instructionList = instructionList;
+        // Checks the cursor can move to the position.
+        if(!cursor.moveToPosition(position)){
+            return;
         }
 
-        // Refreshes the recycler view if the list is not empty.
-        if(instructionList != null) {
+        // Gets the instruction description from the row in the cursor.
+        String instructionDescription = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.InstructionEntry.COLUMN_DESCRIPTION));
+
+        // Sets the text of the view to the instruction description.
+        holder.instructionDescriptionTextView.setText(instructionDescription);
+    }
+
+    // Returns the size of the dataset.
+    @Override
+    public int getItemCount() {
+        return cursor.getCount();
+    }
+
+    // Updates the cursor with new data.
+    public void updateCursor(Cursor newCursor){
+
+        // Closes the cursor if it is not empty.
+        if(cursor != null) {
+            cursor.close();
+        }
+
+        // Assigns the new cursor.
+        cursor = newCursor;
+
+        // Refreshes the recycler view if the cursor is not empty.
+        if(newCursor != null) {
             notifyDataSetChanged();
         }
     }

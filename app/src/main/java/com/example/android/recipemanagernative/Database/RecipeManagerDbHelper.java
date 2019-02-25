@@ -127,6 +127,10 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
 
     // Deletes a category.
     public void deleteCategory(Long categoryID) {
+
+        // Deletes all recipes in the category.
+        deleteAllRecipes(categoryID);
+
         String selection = RecipeManagerContract.CategoryEntry.ID + " LIKE ?";
         String[] selectionArgs = {categoryID.toString()};
         writeDB.delete(RecipeManagerContract.CategoryEntry.TABLE_NAME, selection, selectionArgs);
@@ -163,6 +167,10 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
 
     // Inserts a recipe into the database.
     public long insertRecipe(long categoryID, Recipe recipe){
+
+        long recipeNewRowID; // Stores the ID of a new recipe row.
+        long instructionNewRowID; // Stores the ID of a new instruction row.
+
         ContentValues values = new ContentValues();
         values.put(RecipeManagerContract.RecipeEntry.CATEGORY_ID, categoryID);
         values.put(RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME, recipe.getRecipeName());
@@ -171,7 +179,38 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         values.put(RecipeManagerContract.RecipeEntry.COLUMN_INSTRUCTION_COUNT, recipe.getTotalInstructions());
         values.put(RecipeManagerContract.RecipeEntry.COLUMN_TOTAL_DURATION, recipe.getDuration());
 
-        return writeDB.insert(RecipeManagerContract.RecipeEntry.TABLE_NAME, null, values);
+        // Inserts a recipe into the database.
+        recipeNewRowID = writeDB.insert(RecipeManagerContract.RecipeEntry.TABLE_NAME, null, values);
+
+        // Returns the error code if an error occurred.
+        if(recipeNewRowID == -1){
+            return recipeNewRowID;
+        }
+
+        // Iterates through all the instructions.
+        for(int i = 0; i < recipe.getTotalInstructions(); i++){
+
+            // Inserts an instruction into the database.
+            instructionNewRowID = insertInstruction(recipeNewRowID, i + 1, recipe.getInstructionList().get(i));
+
+            // Returns the error code if an error occurred.
+            if(instructionNewRowID == -1){
+                return instructionNewRowID;
+            }
+        }
+
+        // Returns the ID of the new recipe.
+        return recipeNewRowID;
+    }
+
+    // Inserts an instruction into the database.
+    private long insertInstruction(long recipeNewRowID, int sequenceNumber, String instructionDescription){
+        ContentValues values = new ContentValues();
+        values.put(RecipeManagerContract.InstructionEntry.RECIPE_ID, recipeNewRowID);
+        values.put(RecipeManagerContract.InstructionEntry.COLUMN_SEQUENCE_NUMBER, sequenceNumber);
+        values.put(RecipeManagerContract.InstructionEntry.COLUMN_DESCRIPTION, instructionDescription);
+
+        return writeDB.insert(RecipeManagerContract.InstructionEntry.TABLE_NAME, null, values);
     }
 
     // Concatenates all ingredients list items into one string for easier storage.
@@ -184,5 +223,19 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         }
 
         return ingredients;
+    }
+
+    // Deletes a recipe.
+    public void deleteRecipe(Long recipeID) {
+        String selection = RecipeManagerContract.RecipeEntry.ID + " LIKE ?";
+        String[] selectionArgs = {recipeID.toString()};
+        writeDB.delete(RecipeManagerContract.RecipeEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    // Deletes all recipes belonging to a particular category.
+    private void deleteAllRecipes(Long categoryID){
+        String selection = RecipeManagerContract.RecipeEntry.CATEGORY_ID + " LIKE ?";
+        String[] selectionArgs = {categoryID.toString()};
+        writeDB.delete(RecipeManagerContract.RecipeEntry.TABLE_NAME,selection,selectionArgs);
     }
 }

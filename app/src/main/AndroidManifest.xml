@@ -74,5 +74,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AddRecipeActivity" />
         </activity>
+        <activity
+            android:name=".RecipeActivity"
+            android:label="@string/title_recipe_activity"
+            android:parentActivityName=".CategoryActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CategoryActivity" />
+        </activity>
     </application>
 </manifest>

@@ -84,10 +84,6 @@ public final class RecipeManagerContract {
         // TYPE: STRING
         public final static String COLUMN_DESCRIPTION = "description";
 
-        // Duration for the instruction.
-        // TYPE: INT
-        public final static String COLUMN_DURATION = "duration";
-
         // Foreign key for a recipe.
         // TYPE: INTEGER
         public final static String FK_RECIPE_ID = "fk_recipe_id";
@@ -123,7 +119,6 @@ public final class RecipeManagerContract {
                 InstructionEntry.RECIPE_ID + " INTEGER NOT NULL," +
                 InstructionEntry.COLUMN_SEQUENCE_NUMBER + " INTEGER NOT NULL," +
                 InstructionEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL," +
-                InstructionEntry.COLUMN_DURATION + " INTEGER NOT NULL," +
                 "CONSTRAINT " + InstructionEntry.FK_RECIPE_ID +
                 " FOREIGN KEY (" + InstructionEntry.RECIPE_ID + ") " +
                 "REFERENCES " + RecipeEntry.TABLE_NAME + "(" + RecipeEntry.ID + "));";
