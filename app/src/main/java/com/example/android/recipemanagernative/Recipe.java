@@ -7,11 +7,12 @@ public class Recipe {
     private long categoryID; // Stores the categoryID of the category the recipe belongs to.
     private String recipeName; // Stores the name of the recipe.
     private List<String> ingredientsList; // Stores the list of ingredients.
+    private String ingredientsListString; // Stores the list of ingredients as a string.
     private List<String> instructionList; // Stores the list of instructions.
     private int totalInstructions; // Stores the total number of instructions.
     private int duration; // Stores the duration of the recipe.
 
-    // Constructor for the Recipe class.
+    // Constructors for the Recipe class.
     public Recipe(long categoryID, String recipeName, List<String> ingredientsList,
                 List<String> instructionList, int duration){
 
@@ -20,6 +21,11 @@ public class Recipe {
         this.ingredientsList = ingredientsList;
         this.instructionList = instructionList;
         this.totalInstructions = instructionList.size();
+        this.duration = duration;
+    }
+
+    public Recipe(String ingredientsListString, int duration){
+        this.ingredientsListString = ingredientsListString;
         this.duration = duration;
     }
 
@@ -34,6 +40,8 @@ public class Recipe {
     public List<String> getIngredientsList(){
         return ingredientsList;
     }
+
+    public String getIngredientsListString() {return ingredientsListString;}
 
     public List<String> getInstructionList(){
         return instructionList;

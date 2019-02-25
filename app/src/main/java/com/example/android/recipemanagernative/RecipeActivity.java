@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
 import com.example.android.recipemanagernative.RecyclerViews.InstructionAdapter;
@@ -19,7 +20,6 @@ import com.example.android.recipemanagernative.RecyclerViews.RecipeAdapter;
 public class RecipeActivity extends AppCompatActivity {
 
     private long recipeID; // ID for the recipe being displayed.
-    private InstructionAdapter instructionAdapter; // Stores an adapter for the recycler view.
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +34,7 @@ public class RecipeActivity extends AppCompatActivity {
         // Sets the toolbar.
         Toolbar toolbar = findViewById(R.id.toolbar_recipe);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(String.valueOf(recipeID));
+        getSupportActionBar().setTitle(findRecipeTitle(recipeID));
 
         if(getSupportActionBar() != null) {
             // Allows up navigation in the toolbar.
@@ -47,11 +47,19 @@ public class RecipeActivity extends AppCompatActivity {
         // Creates the recycler view.
         RecyclerView recipeRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_instruction);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //instructionAdapter = new InstructionAdapter( DATABASE QUERY);
-        //recipeRecyclerView.setAdapter(recipeAdapter);
+        InstructionAdapter instructionAdapter = new InstructionAdapter(RecipeManagerDbHelper.getInstance(this).findInstructions(recipeID));
+        recipeRecyclerView.setAdapter(instructionAdapter);
 
-        // Adds a separator to the recycler view.
-        recipeRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        // Gets a recipe object with the ingredients list and duration.
+        Recipe displayRecipe = findRecipeInfo(recipeID);
+
+        // Sets the ingredients list text view.
+        TextView ingredientsListTextView = (TextView) findViewById(R.id.text_view_ingredients_list);
+        ingredientsListTextView.setText(formatIngredientsList(displayRecipe.getIngredientsListString()));
+
+        // Sets the duration text view.
+        TextView durationTextView = (TextView) findViewById(R.id.text_view_heading_duration);
+        durationTextView.append(" " + String.valueOf(displayRecipe.getDuration()));
     }
 
     @Override
@@ -108,4 +116,25 @@ public class RecipeActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
+    // Finds the recipe title corresponding to the supplied recipe ID.
+    private String findRecipeTitle(long recipeID){
+
+        // Gets the category name from the database.
+        return RecipeManagerDbHelper.getInstance(this).findRecipeName(recipeID);
+    }
+
+    // Finds the ingredients list corresponding to the supplied recipe ID.
+    private Recipe findRecipeInfo(long recipeID){
+
+        // Gets the recipe ingredients from the database.
+        return RecipeManagerDbHelper.getInstance(this).findRecipeInfo(recipeID);
+    }
+
+    // Formats the ingredients list.
+    private String formatIngredientsList(String ingredientsList){
+
+        return ingredientsList.replace(",", "\n");
+    }
+
 }

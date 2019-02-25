@@ -27,7 +27,6 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
 
             // Assigns the text view.
             instructionDescriptionTextView = view.findViewById(R.id.text_view_instruction_description);
-
         }
     }
 
@@ -55,11 +54,13 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
             return;
         }
 
-        // Gets the instruction description from the row in the cursor.
+        // Gets the instruction sequence number and description from the rows in the cursor.
+        String sequenceNumber = String.valueOf(cursor.getInt(cursor.getColumnIndex(RecipeManagerContract.InstructionEntry.COLUMN_SEQUENCE_NUMBER)));
         String instructionDescription = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.InstructionEntry.COLUMN_DESCRIPTION));
+        String instructionText = sequenceNumber + ". " + instructionDescription;
 
         // Sets the text of the view to the instruction description.
-        holder.instructionDescriptionTextView.setText(instructionDescription);
+        holder.instructionDescriptionTextView.setText(instructionText);
     }
 
     // Returns the size of the dataset.
@@ -68,20 +69,4 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
         return cursor.getCount();
     }
 
-    // Updates the cursor with new data.
-    public void updateCursor(Cursor newCursor){
-
-        // Closes the cursor if it is not empty.
-        if(cursor != null) {
-            cursor.close();
-        }
-
-        // Assigns the new cursor.
-        cursor = newCursor;
-
-        // Refreshes the recycler view if the cursor is not empty.
-        if(newCursor != null) {
-            notifyDataSetChanged();
-        }
-    }
 }

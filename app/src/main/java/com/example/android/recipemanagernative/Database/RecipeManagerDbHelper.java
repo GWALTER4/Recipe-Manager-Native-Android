@@ -125,6 +125,38 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         return "Error";
     }
 
+    // Finds the name of a recipe corresponding to the supplied recipe ID.
+    public String findRecipeName(Long recipeID){
+
+        // Defines a projection.
+        String[] projection = {
+                RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME
+        };
+
+        // Filters the query results.
+        String selection = RecipeManagerContract.RecipeEntry.ID + " = ?";
+        String[] selectionArgs = {recipeID.toString()};
+
+        // Gets a cursor from the database.
+        Cursor cursor =  readDB.query(
+                RecipeManagerContract.RecipeEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if(cursor != null && cursor.moveToFirst()) {
+            String categoryName = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME));
+            cursor.close();
+            return categoryName;
+        }
+
+        return "Error";
+    }
+
     // Deletes a category.
     public void deleteCategory(Long categoryID) {
 
@@ -238,4 +270,65 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         String[] selectionArgs = {categoryID.toString()};
         writeDB.delete(RecipeManagerContract.RecipeEntry.TABLE_NAME,selection,selectionArgs);
     }
+
+    // Reads the instructions from a particular recipe from the database.
+    public Cursor findInstructions(Long recipeID){
+
+        // Defines a projection that specifies which columns from the database the query will use.
+        String[] projection = {
+                RecipeManagerContract.InstructionEntry.ID,
+                RecipeManagerContract.InstructionEntry.COLUMN_SEQUENCE_NUMBER,
+                RecipeManagerContract.InstructionEntry.COLUMN_DESCRIPTION
+        };
+
+        // Filters the query results.
+        String selection = RecipeManagerContract.InstructionEntry.RECIPE_ID + " = ?";
+        String[] selectionArgs = {recipeID.toString()};
+
+        // Executes the query.
+        return readDB.query(
+                RecipeManagerContract.InstructionEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+    }
+
+    public Recipe findRecipeInfo(Long recipeID){
+
+        // Defines a projection that specifies which columns from the database the query will use.
+        String[] projection = {
+                RecipeManagerContract.RecipeEntry.COLUMN_INGREDIENTS_LIST,
+                RecipeManagerContract.RecipeEntry.COLUMN_TOTAL_DURATION
+        };
+
+        // Filters the query results.
+        String selection = RecipeManagerContract.RecipeEntry.ID + " = ?";
+        String[] selectionArgs = {recipeID.toString()};
+
+        // Executes the query.
+        Cursor cursor =  readDB.query(
+                RecipeManagerContract.RecipeEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if(cursor != null && cursor.moveToFirst()) {
+            String ingredientsList =  cursor.getString(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_INGREDIENTS_LIST));
+            int duration = cursor.getInt(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_TOTAL_DURATION));
+            cursor.close();
+
+            return new Recipe(ingredientsList, duration);
+        }
+
+        return new Recipe("Error", -1);
+    }
+
 }
