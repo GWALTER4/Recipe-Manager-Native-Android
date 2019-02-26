@@ -1,9 +1,13 @@
 package com.example.android.recipemanagernative;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,8 +21,11 @@ import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
 import com.example.android.recipemanagernative.RecyclerViews.InstructionAdapter;
 import com.example.android.recipemanagernative.RecyclerViews.RecipeAdapter;
 
+import java.util.Date;
+
 public class RecipeActivity extends AppCompatActivity {
 
+    static final int IMAGE_CAPTURE_REQUEST = 1; // Request code for the intent.
     private long recipeID; // ID for the recipe being displayed.
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +79,9 @@ public class RecipeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+
+            case R.id.action_edit_photo:
+                editPhoto();
 
             case R.id.action_delete_recipe:
                 createDeleteDialog().show();
@@ -137,4 +147,18 @@ public class RecipeActivity extends AppCompatActivity {
         return ingredientsList.replace(",", "\n");
     }
 
+
+    private void editPhoto(PhotoManager photoManager){
+
+        if(photoManager.hasCamera()){
+
+            // Creates a new intent to have a camera application capture an image and return it.
+            Intent imageCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            // Checks that the device has an app that can handle the intent.
+            if(imageCaptureIntent.resolveActivity(getPackageManager()) != null){
+                startActivityForResult(imageCaptureIntent, IMAGE_CAPTURE_REQUEST);
+            }
+        }
+    }
 }

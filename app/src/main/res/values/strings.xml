@@ -7,6 +7,7 @@
     <string name="action_confirm_ingredient">Confirm ingredient</string>
     <string name="action_add_recipe">Add recipe</string>
     <string name="action_delete_recipe">Delete recipe</string>
+    <string name="action_edit_photo">Edit photo</string>
     <string name="title_add_category_activity">Add a Category</string>
     <string name="title_category_activity">Category</string>
     <string name="title_add_recipe_activity">Add a Recipe</string>
@@ -35,5 +36,4 @@
     <string name="heading_ingredients">Ingredients:</string>
     <string name="heading_ingredient">Ingredient:</string>
     <string name="heading_duration">Duration (Minutes) :</string>
-
 </resources>
