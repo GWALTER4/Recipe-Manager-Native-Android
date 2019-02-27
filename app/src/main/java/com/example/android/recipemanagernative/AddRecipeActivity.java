@@ -205,6 +205,7 @@ public class AddRecipeActivity extends AppCompatActivity implements AddIngredien
         ingredientAdapter.updateList(addRecipeListsManager.getIngredientList());
     }
 
+    // Updates the instruction list in the instruction adapter.
     private void updateInstructionList(){
         instructionAdapter.updateList(addRecipeListsManager.getInstructionList());
     }
@@ -217,7 +218,6 @@ public class AddRecipeActivity extends AppCompatActivity implements AddIngredien
         createDeleteDialog().show();
     }
 
-    // MVC
     // Overrides the implementation in the AddInstructionAdapter.OnInstructionClickListener interface.
     @Override
     public void onInstructionClick(int position){
@@ -226,6 +226,7 @@ public class AddRecipeActivity extends AppCompatActivity implements AddIngredien
         createDeleteDialog().show();
     }
 
+    // Checks that the recipe is valid and inserts it into the database.
     private int confirmRecipe(){
         // Finds the EditText views and gets the strings from them.
         final EditText recipeNameEditText = (EditText) findViewById(R.id.edit_recipe_name);

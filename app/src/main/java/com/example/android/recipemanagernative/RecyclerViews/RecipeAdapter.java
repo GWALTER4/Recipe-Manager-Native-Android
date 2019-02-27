@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.example.android.recipemanagernative.Database.RecipeManagerContract;
 import com.example.android.recipemanagernative.R;
 
+import java.io.File;
+
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
 
     private Context context; // Holds the application context.
@@ -86,12 +88,16 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
         // Gets the date from the cursor.
         String recipeName = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME));
+        String imagePath = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_PATH));
         int recipeSteps = cursor.getInt(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_INSTRUCTION_COUNT));
         int recipeDuration = cursor.getInt(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_TOTAL_DURATION));
         long recipeID = cursor.getLong(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.ID));
 
         // Sets the views with the data from the cursor.
         holder.recipeNameTextView.setText(recipeName);
+        if(imagePath != null) {
+            holder.recipeImageView.setImageURI(Uri.fromFile(new File(imagePath)));
+        }
         holder.recipeStepsTextView.setText(String.valueOf(recipeSteps + " Steps"));
         holder.recipeDurationTextView.setText(String.valueOf(recipeDuration + " Minutes"));
         holder.itemView.setTag(recipeID);

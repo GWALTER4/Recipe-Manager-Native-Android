@@ -73,6 +73,7 @@ public class AddInstructionActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Checks that the instruction is valid.
     private boolean isInstructionValid(){
 
         // Finds the EditText view and gets the string from it.

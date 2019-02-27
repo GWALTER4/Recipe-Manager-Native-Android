@@ -1,32 +1,33 @@
 package com.example.android.recipemanagernative;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.recipemanagernative.Database.RecipeManagerDbHelper;
 import com.example.android.recipemanagernative.RecyclerViews.InstructionAdapter;
-import com.example.android.recipemanagernative.RecyclerViews.RecipeAdapter;
 
-import java.util.Date;
+import java.io.IOException;
 
 public class RecipeActivity extends AppCompatActivity {
 
-    static final int IMAGE_CAPTURE_REQUEST = 1; // Request code for the intent.
+    static final int REQUEST_IMAGE_CAPTURE = 1; // Request code for the intent.
     private long recipeID; // ID for the recipe being displayed.
+    ImageManager imageManager;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +39,14 @@ public class RecipeActivity extends AppCompatActivity {
         // Gets the extras from the starting activity.
         recipeID = categoryActivityIntent.getLongExtra(MainActivity.START_MESSAGE, -1);
 
+        imageManager = new ImageManager();
+
         // Sets the toolbar.
         Toolbar toolbar = findViewById(R.id.toolbar_recipe);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(findRecipeTitle(recipeID));
 
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             // Allows up navigation in the toolbar.
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -69,6 +72,26 @@ public class RecipeActivity extends AppCompatActivity {
         durationTextView.append(" " + String.valueOf(displayRecipe.getDuration()));
     }
 
+    // Finds the recipe title corresponding to the supplied recipe ID.
+    private String findRecipeTitle(long recipeID) {
+
+        // Gets the category name from the database.
+        return RecipeManagerDbHelper.getInstance(this).findRecipeName(recipeID);
+    }
+
+    // Finds the ingredients list corresponding to the supplied recipe ID.
+    private Recipe findRecipeInfo(long recipeID) {
+
+        // Gets the recipe ingredients from the database.
+        return RecipeManagerDbHelper.getInstance(this).findRecipeInfo(recipeID);
+    }
+
+    // Formats the ingredients list.
+    private String formatIngredientsList(String ingredientsList) {
+
+        return ingredientsList.replace(",", "\n");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_recipe, menu);
@@ -82,6 +105,7 @@ public class RecipeActivity extends AppCompatActivity {
 
             case R.id.action_edit_photo:
                 editPhoto();
+                return true;
 
             case R.id.action_delete_recipe:
                 createDeleteDialog().show();
@@ -91,7 +115,7 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
     // Creates a dialog to delete the category
-    private AlertDialog createDeleteDialog(){
+    private AlertDialog createDeleteDialog() {
 
         // Creates a dialog builder to build the dialog.
         AlertDialog.Builder deleteDialogBuilder = new AlertDialog.Builder(this);
@@ -127,38 +151,42 @@ public class RecipeActivity extends AppCompatActivity {
         return true;
     }
 
-    // Finds the recipe title corresponding to the supplied recipe ID.
-    private String findRecipeTitle(long recipeID){
-
-        // Gets the category name from the database.
-        return RecipeManagerDbHelper.getInstance(this).findRecipeName(recipeID);
+    private void editPhoto() {
+        sendImageIntent();
     }
 
-    // Finds the ingredients list corresponding to the supplied recipe ID.
-    private Recipe findRecipeInfo(long recipeID){
+    private void sendImageIntent() {
 
-        // Gets the recipe ingredients from the database.
-        return RecipeManagerDbHelper.getInstance(this).findRecipeInfo(recipeID);
-    }
+        // Creates an intent to capture and return an image.
+        Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-    // Formats the ingredients list.
-    private String formatIngredientsList(String ingredientsList){
+        // Checks that the device has an application that can handle the intent.
+        if (imageIntent.resolveActivity(getPackageManager()) != null) {
 
-        return ingredientsList.replace(",", "\n");
-    }
+            try {
+                // Creates a Uri for an image file and adds it to the intent extras.
+                imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageManager.createImageUri(this, imageManager.prepareImageFile(this)));
 
-
-    private void editPhoto(PhotoManager photoManager){
-
-        if(photoManager.hasCamera()){
-
-            // Creates a new intent to have a camera application capture an image and return it.
-            Intent imageCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-            // Checks that the device has an app that can handle the intent.
-            if(imageCaptureIntent.resolveActivity(getPackageManager()) != null){
-                startActivityForResult(imageCaptureIntent, IMAGE_CAPTURE_REQUEST);
+                // Starts the camera activity.
+                startActivityForResult(imageIntent, REQUEST_IMAGE_CAPTURE);
+            } catch (IOException exception) {
+                Toast.makeText(this, "Error creating image file", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            RecipeManagerDbHelper.getInstance(this).insertRecipeImageFilePath(recipeID, imageManager.getImageFilePath());
+            Toast.makeText(this, "Image captured", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            imageManager.deleteImageFile();
+        }
+    }
+
 }
+
+

@@ -5,10 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 
-import com.example.android.recipemanagernative.R;
 import com.example.android.recipemanagernative.Recipe;
 
+import java.io.File;
 import java.util.List;
 
 public class RecipeManagerDbHelper extends SQLiteOpenHelper {
@@ -121,6 +122,9 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
             cursor.close();
             return categoryName;
         }
+        else{
+            cursor.close();
+        }
 
         return "Error";
     }
@@ -153,6 +157,9 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
             cursor.close();
             return categoryName;
         }
+        else{
+            cursor.close();
+        }
 
         return "Error";
     }
@@ -176,6 +183,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
                 RecipeManagerContract.RecipeEntry.ID,
                 RecipeManagerContract.RecipeEntry.CATEGORY_ID,
                 RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME,
+                RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_PATH,
                 RecipeManagerContract.RecipeEntry.COLUMN_INGREDIENTS_LIST,
                 RecipeManagerContract.RecipeEntry.COLUMN_INSTRUCTION_COUNT,
                 RecipeManagerContract.RecipeEntry.COLUMN_TOTAL_DURATION
@@ -206,7 +214,6 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(RecipeManagerContract.RecipeEntry.CATEGORY_ID, categoryID);
         values.put(RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME, recipe.getRecipeName());
-        values.put(RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_URI, 1);
         values.put(RecipeManagerContract.RecipeEntry.COLUMN_INGREDIENTS_LIST, concatIngredientsList(recipe.getIngredientsList()));
         values.put(RecipeManagerContract.RecipeEntry.COLUMN_INSTRUCTION_COUNT, recipe.getTotalInstructions());
         values.put(RecipeManagerContract.RecipeEntry.COLUMN_TOTAL_DURATION, recipe.getDuration());
@@ -271,7 +278,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         writeDB.delete(RecipeManagerContract.RecipeEntry.TABLE_NAME,selection,selectionArgs);
     }
 
-    // Reads the instructions from a particular recipe from the database.
+    // Reads the instructions for a particular recipe from the database.
     public Cursor findInstructions(Long recipeID){
 
         // Defines a projection that specifies which columns from the database the query will use.
@@ -297,6 +304,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         );
     }
 
+    // Reads the ingredients and duration for a particular recipe from the database.
     public Recipe findRecipeInfo(Long recipeID){
 
         // Defines a projection that specifies which columns from the database the query will use.
@@ -327,8 +335,61 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
 
             return new Recipe(ingredientsList, duration);
         }
+        else{
+            cursor.close();
+        }
 
         return new Recipe("Error", -1);
     }
 
+    public boolean insertRecipeImageFilePath(Long recipeID, String newFilePath){
+
+        deleteOldImage(recipeID);
+
+        ContentValues values = new ContentValues();
+        values.put(RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_PATH, newFilePath);
+
+
+        String selection = RecipeManagerContract.RecipeEntry.ID + " LIKE ?";
+        String[] selectionArgs = {recipeID.toString()};
+
+        int rowsUpdated = writeDB.update(
+                RecipeManagerContract.RecipeEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+
+        return rowsUpdated > 0;
+    }
+
+    public void deleteOldImage(Long recipeID){
+
+        // Defines a projection that specifies which columns from the database the query will use.
+        String[] projection = {
+                RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_PATH
+        };
+
+        // Filters the query results.
+        String selection = RecipeManagerContract.RecipeEntry.ID + " = ?";
+        String[] selectionArgs = {recipeID.toString()};
+
+        // Executes the query.
+        Cursor cursor =  readDB.query(
+                RecipeManagerContract.RecipeEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if(cursor != null && cursor.moveToFirst()){
+            String filePath = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_PATH));
+            if(filePath != null){
+                File oldImageFile = new File(filePath);
+                oldImageFile.delete();
+            }
+        }
+    }
 }

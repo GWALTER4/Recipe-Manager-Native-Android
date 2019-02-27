@@ -43,7 +43,7 @@ public final class RecipeManagerContract {
 
         // Image URI for the recipe image.
         // TYPE: STRING
-        public final static String COLUMN_IMAGE_URI = "image_URI";
+        public final static String COLUMN_IMAGE_PATH = "image_path";
 
         // List of recipe ingredients.
         // TYPE: STRING
@@ -104,7 +104,7 @@ public final class RecipeManagerContract {
                 RecipeEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 RecipeEntry.CATEGORY_ID + " INTEGER NOT NULL," +
                 RecipeEntry.COLUMN_RECIPE_NAME + " TEXT NOT NULL," +
-                RecipeEntry.COLUMN_IMAGE_URI + " INTEGER NOT NULL," +
+                RecipeEntry.COLUMN_IMAGE_PATH + " TEXT," +
                 RecipeEntry.COLUMN_INGREDIENTS_LIST + " TEXT NOT NULL," +
                 RecipeEntry.COLUMN_INSTRUCTION_COUNT + " INTEGER NOT NULL," +
                 RecipeEntry.COLUMN_TOTAL_DURATION + " INTEGER NOT NULL," +

@@ -70,6 +70,7 @@ public class AddIngredientActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Checks that the ingredient is valid.
     public boolean confirmIngredient(){
 
         // Finds the EditText view and gets the string from it.
