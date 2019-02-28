@@ -13,11 +13,13 @@ import java.util.Date;
 
 public class ImageManager {
 
-    private String imageFilePath;
-    private File imageFile;
+    private String imageFilePath; // Stores the file path of the image.
+    private File imageFile; // Stores the temporary file.
 
+    // Constructor for the ImageManager class.
     public ImageManager(){
         imageFilePath = null;
+        imageFile = null;
     }
 
     public String getImageFilePath(){

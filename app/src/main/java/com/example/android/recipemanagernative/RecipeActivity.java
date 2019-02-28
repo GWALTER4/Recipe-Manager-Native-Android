@@ -3,9 +3,6 @@ package com.example.android.recipemanagernative;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -151,10 +148,12 @@ public class RecipeActivity extends AppCompatActivity {
         return true;
     }
 
+    // Allows the user to capture an image.
     private void editPhoto() {
         sendImageIntent();
     }
 
+    // Sends an intent to open the camera app and capture an image.
     private void sendImageIntent() {
 
         // Creates an intent to capture and return an image.
@@ -176,13 +175,17 @@ public class RecipeActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            RecipeManagerDbHelper.getInstance(this).insertRecipeImageFilePath(recipeID, imageManager.getImageFilePath());
+
+            // Updates the recipe in the database with the image path of the captured image.
+            RecipeManagerDbHelper.getInstance(this).updateRecipeImageFilePath(recipeID, imageManager.getImageFilePath());
             Toast.makeText(this, "Image captured", Toast.LENGTH_SHORT).show();
         }
         else{
+            // Deletes the temporary file if the image path is not saved to the database.
             imageManager.deleteImageFile();
         }
     }

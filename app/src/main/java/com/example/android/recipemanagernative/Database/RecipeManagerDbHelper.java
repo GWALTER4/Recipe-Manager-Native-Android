@@ -211,6 +211,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         long recipeNewRowID; // Stores the ID of a new recipe row.
         long instructionNewRowID; // Stores the ID of a new instruction row.
 
+        // Creates a new map of values.
         ContentValues values = new ContentValues();
         values.put(RecipeManagerContract.RecipeEntry.CATEGORY_ID, categoryID);
         values.put(RecipeManagerContract.RecipeEntry.COLUMN_RECIPE_NAME, recipe.getRecipeName());
@@ -342,24 +343,26 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         return new Recipe("Error", -1);
     }
 
-    public boolean insertRecipeImageFilePath(Long recipeID, String newFilePath){
+    // Updates the image file path for a recipe.
+    public void updateRecipeImageFilePath(Long recipeID, String newFilePath){
 
+        // Deletes the old recipe image if one exists.
         deleteOldImage(recipeID);
 
+        // Creates a new map of values.
         ContentValues values = new ContentValues();
         values.put(RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_PATH, newFilePath);
 
-
+        // Filters the query results.
         String selection = RecipeManagerContract.RecipeEntry.ID + " LIKE ?";
         String[] selectionArgs = {recipeID.toString()};
 
-        int rowsUpdated = writeDB.update(
+        // Updates the database.
+        writeDB.update(
                 RecipeManagerContract.RecipeEntry.TABLE_NAME,
                 values,
                 selection,
                 selectionArgs);
-
-        return rowsUpdated > 0;
     }
 
     public void deleteOldImage(Long recipeID){
@@ -385,9 +388,15 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         );
 
         if(cursor != null && cursor.moveToFirst()){
+
+            // Gets the file path from the cursor.
             String filePath = cursor.getString(cursor.getColumnIndex(RecipeManagerContract.RecipeEntry.COLUMN_IMAGE_PATH));
             if(filePath != null){
+
+                // Gets the old image file.
                 File oldImageFile = new File(filePath);
+
+                // Deletes the old image file.
                 oldImageFile.delete();
             }
         }
