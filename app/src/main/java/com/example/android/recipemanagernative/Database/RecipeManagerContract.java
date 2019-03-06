@@ -110,7 +110,8 @@ public final class RecipeManagerContract {
                 RecipeEntry.COLUMN_TOTAL_DURATION + " INTEGER NOT NULL," +
                 "CONSTRAINT " + RecipeEntry.FK_CATEGORY_ID +
                 " FOREIGN KEY (" + RecipeEntry.CATEGORY_ID + ") " +
-                "REFERENCES " + CategoryEntry.TABLE_NAME + "(" + CategoryEntry.ID + "));";
+                "REFERENCES " + CategoryEntry.TABLE_NAME + "(" + CategoryEntry.ID + ") " +
+                "ON DELETE CASCADE);";
 
         // Instruction table create statement.
         public static final String SQL_CREATE_INSTRUCTION =
@@ -121,6 +122,7 @@ public final class RecipeManagerContract {
                 InstructionEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL," +
                 "CONSTRAINT " + InstructionEntry.FK_RECIPE_ID +
                 " FOREIGN KEY (" + InstructionEntry.RECIPE_ID + ") " +
-                "REFERENCES " + RecipeEntry.TABLE_NAME + "(" + RecipeEntry.ID + "));";
+                "REFERENCES " + RecipeEntry.TABLE_NAME + "(" + RecipeEntry.ID + ") " +
+                "ON DELETE CASCADE);";
     }
 }

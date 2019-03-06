@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.os.strictmode.SqliteObjectLeakedViolation;
 
 import com.example.android.recipemanagernative.Recipe;
 
@@ -49,6 +50,7 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     }
 
     // Called when the database is created for the first time.
+    @Override
     public void onCreate(SQLiteDatabase db) {
 
         // Executes the create table statements.
@@ -58,8 +60,15 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
     }
 
     // Called when the database needs to be upgraded.
+    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    // Called when the database is opened.
+    @Override
+    public void onOpen(SQLiteDatabase db){
+        db.execSQL("PRAGMA foreign_keys = ON;");
     }
 
     // Inserts a category into the database.
@@ -166,10 +175,6 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
 
     // Deletes a category.
     public void deleteCategory(Long categoryID) {
-
-        // Deletes all recipes in the category.
-        deleteAllRecipes(categoryID);
-
         String selection = RecipeManagerContract.CategoryEntry.ID + " LIKE ?";
         String[] selectionArgs = {categoryID.toString()};
         writeDB.delete(RecipeManagerContract.CategoryEntry.TABLE_NAME, selection, selectionArgs);
@@ -270,13 +275,6 @@ public class RecipeManagerDbHelper extends SQLiteOpenHelper {
         String selection = RecipeManagerContract.RecipeEntry.ID + " LIKE ?";
         String[] selectionArgs = {recipeID.toString()};
         writeDB.delete(RecipeManagerContract.RecipeEntry.TABLE_NAME, selection, selectionArgs);
-    }
-
-    // Deletes all recipes belonging to a particular category.
-    private void deleteAllRecipes(Long categoryID){
-        String selection = RecipeManagerContract.RecipeEntry.CATEGORY_ID + " LIKE ?";
-        String[] selectionArgs = {categoryID.toString()};
-        writeDB.delete(RecipeManagerContract.RecipeEntry.TABLE_NAME,selection,selectionArgs);
     }
 
     // Reads the instructions for a particular recipe from the database.
