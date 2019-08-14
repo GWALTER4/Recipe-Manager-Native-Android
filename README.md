@@ -8,4 +8,4 @@ The application allows the user to create categories and later create recipes un
 instructions, and duration for each recipe. The user can also choose to add a photo to each recipe that will appear next to 
 the recipe name on the category page.
 
-![alt text](https://raw.githubusercontent.com/GWALTER4/Recipe-Manager-Native-Android/master/Images/nativemainpage.png)
+![alt text](https://raw.githubusercontent.com/GWALTER4/Recipe-Manager-Native-Android/master/Images/NativeMainPage.png)
